@@ -226,9 +226,13 @@ body{
    position: absolute;
    right: 10px;
    top: 5px;
-   color: red;
+   color: #D00000;
    font-size: 30px;
    cursor: pointer;
+}
+
+.wrapper .hidePwGen:hover{
+   color: #FF1313;
 }
 
 .copy-icon:hover{

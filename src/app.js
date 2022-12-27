@@ -84,3 +84,22 @@ const toggleModal = ()=>{
     el.addEventListener('click',()=> toggleModal());
 });
 
+/* Validação Login */
+
+$('#login').click(function(){
+    var sLoginEmail = $('#logEmail').val();//Obtendo os dados preenchidos
+    var sLoginPwd = $('#logEmail').val();//Obtendo os dados preenchidos
+
+    jData = '{"email":"'+sLoginEmail+'","password":"'+sLoginPwd+'"}'// Corpo da Requisição
+
+    //Requisição Ajax encaminhando os dados de Login
+    $.ajax({
+        url: "api/account.php?action=login",
+        contentType: "application/json; charset=utf-8",
+        type: "POST",
+        data: jData
+    }).done(function(response){
+        console.log(response)
+    })
+    
+});
