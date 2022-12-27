@@ -125,6 +125,12 @@ body{
    padding: 10px;
 }
 
+.input-field i.showPwGen{
+   right: 0;
+   cursor: pointer;
+   padding: 10px;
+}
+
 .form .checkbox-text{
    display: flex;
    justify-content: space-between;
@@ -177,4 +183,139 @@ body{
 .form .login-signup{
    margin-top: 30px;
    text-align: center;
+}
+
+/* Gerar Senha */
+
+.wrapper{
+   position: relative;
+   max-width: 350px;
+   width: 100%;
+   background: #fff;
+   border-radius: 12px;
+   padding: 30px 25px;
+}
+
+.wrapper .password-box{
+   position: relative;
+   height: 50px;
+   margin-top: 30px;
+}
+
+.password-box input{
+   height: 100%;
+   width: 100%;
+   border-radius: 8px;
+   padding: 0 45px 0 15px;
+   border: 1px solid #aaa;
+   background-color: transparent;
+}
+
+
+.password-box .copy-icon{
+   position: absolute;
+   right: 15px;
+   top: 50%;
+   color: #707070;
+   font-size: 20px;
+   cursor: pointer;
+   transform: translateY(-50%);
+}
+
+.wrapper .hidePwGen{
+   position: absolute;
+   right: 10px;
+   top: 5px;
+   color: red;
+   font-size: 30px;
+   cursor: pointer;
+}
+
+.copy-icon:hover{
+   color: #4070f4;
+}
+
+.wrapper .range-box{
+   display: flex;
+   align-items: center;
+   margin-top: 20px;
+}
+
+.range-box input{
+   width: 100%;
+   height: 5px;
+   accent-color: #4070f4;
+   cursor: pointer;
+}
+
+.range-box .slider-number{
+   min-width: 30px;
+   text-align: right;
+   font-size: 17px;
+   color: #707070;
+}
+
+.wrapper .generate-button{
+   width: 100%;
+   color: #fff;
+   padding: 12px 0;
+   margin-top: 20px;
+   background: #265df2;
+   border: none;
+   border-radius: 8px;
+   cursor: pointer;
+   transition: all 0.2s ease;
+}
+.wrapper .title{
+position: relative;
+  font-size: 23px;
+  font-weight: 600;
+}
+
+.wrapper .title::before{
+   content: '';
+   position: absolute;
+   left: 0;
+   bottom: 0;
+   height: 3px;
+   width: 30px;
+   background-color: #4070f4;
+   border-radius: 25px;
+}
+
+/* Modal*/
+
+#fade{
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   background-color: rgba(0, 0, 0, 0.6);
+   z-index: 5;
+}
+
+#modal{
+   position: fixed;
+   left: 50%;
+   top: 50%;
+   transform: translate(-50%,-50%);
+   z-index: 10;
+}
+
+#modal.hide,
+#fade.hide{
+   opacity: 0;
+   pointer-events: none;
+}
+
+.showPwGen{
+   cursor: pointer;
+}
+
+#fade,
+#modal{
+   transition: 0.5s;
+   opacity: 1;
+   pointer-events: all;
 }

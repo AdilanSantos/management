@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="br">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -74,6 +74,10 @@
                     <div class="input-field">
                         <input type="password" class="password" placeholder="Crie sua Senha" required>
                         <i class="uil uil-lock icon"></i>
+                        <i class="uil uil-key-skeleton-alt showPwGen"></i>
+
+                        
+
                     </div>
 
                     <div class="input-field">
@@ -103,11 +107,32 @@
                     <a href="#" class="text login-link">Criar conta</a>
                 </div>
 
+                <div id="fade" class="hide">
+                    <div class="wrapper hide" id="modal">
+                        
+                        <span class="title">Gerador de Senha</span>
+                        <i class="uil uil-multiply hidePwGen"></i>
+            
+                        <div class="password-box">
+                            <input type="text" disabled />
+                            <i class="uil uil-copy copy-icon"></i>
+                        </div>
+            
+                        <div class="range-box">
+                            <input type="range" min="6" max="16" value="8">
+                            <span class="slider-number">8</span>
+                        </div>
+            
+                        <button class="generate-button">Gerar Senha</button>
+                    </div>
+                </div>
 
-            </div><!-- Fim do FormLogin-->
+            </div><!-- Fim do Form Signup-->
 
         </div><!-- Fim do Forms-->
     </div>
+
+
     
     <script src="src/app.js"></script>
 </body>
