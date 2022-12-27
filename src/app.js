@@ -94,7 +94,7 @@ $('#login').click(function(){
 
     //Requisição Ajax encaminhando os dados de Login
     $.ajax({
-        url: "api/account.php?action=login",
+        url: "https://adilansantos.github.io/api/account.php?action=login",
         contentType: "application/json; charset=utf-8",
         type: "POST",
         data: jData
