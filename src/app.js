@@ -94,12 +94,35 @@ $('#login').click(function(){
 
     //Requisição Ajax encaminhando os dados de Login
     $.ajax({
-        url: "https://adilansantos.github.io/api/account.php?action=login",
+        url: "api/account.php?action=login",
         contentType: "application/json; charset=utf-8",
         type: "POST",
-        data: jData
+        crossDomain: true,
+        data: '{"email":"'+sLoginEmail+'","password":"'+sLoginPwd+'"}'
     }).done(function(response){
-        console.log(response)
+        if (response.success == true) {
+            console.log('Mensagem com Sucesso')
+        }else{
+            $("#message").html(response.msg);//Inserido mensagem de erro no HTML
+            $(".alert").removeClass('hide');//removendo classe para exibir alerta
+            $(".alert").addClass('show');
+            $(".alert").addClass('showAlert');
+
+            //Função para fechar mensagem após 5 segundos
+            setTimeout(function(){
+                $(".alert").addClass("hide");
+                $(".alert").removeClass("show");
+            }, 5000);
+
+        }
+    }).fail(function(jqXHR, StatusCode){
+        console.log(jqXHR)
     })
     
 });
+
+/* Função para fechar mensagem de erro */
+$(".close-message").click(function(){
+    $(".alert").addClass("hide");
+    $(".alert").removeClass("show");
+})
