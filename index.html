@@ -30,16 +30,16 @@
                 <form action="">
                     
                     <div class="input-field">
-                        <input type="text" id="logEmail" placeholder="Insira seu Email" required>
+                        <input class="input-error" type="text" id="logEmail" placeholder="Insira seu Email" required>
                         <i class="uil uil-envelope icon"></i>
+                        
                     </div>
-
                     <div class="input-field">
                         <input type="password" id="logPwd" class="password" placeholder="Insira seu Senha" required>
                         <i class="uil uil-lock icon"></i>
                         <i class="uil uil-eye-slash showHidePw"></i>
+    
                     </div>
-
                     <div class="checkbox-text">
                         <div class="checkbox-content">
                             <input type="checkbox" id="logCheck">
@@ -84,7 +84,12 @@
                     <div class="input-field">
                         <input type="password" id="sigPwd" class="password" placeholder="Crie sua Senha" required>
                         <i class="uil uil-lock icon"></i>
+                        <div class="tooltip">
+                            <span id="tooltipText">Mínimo 6 caracteres</span>
+                            <i class="uil uil-exclamation-triangle pwd-Info"></i>
+                        </div>
                         <i class="uil uil-key-skeleton-alt showPwGen"></i>
+                        
                     </div>
 
                     <div class="input-field">
@@ -92,19 +97,18 @@
                         <i class="uil uil-lock icon"></i>
                         <i class="uil uil-eye-slash showHidePw"></i>
                     </div>
-
+                    
                     <div class="checkbox-text">
                         <div class="checkbox-content">
                             <input type="checkbox" id="sigCheck">
                             <label for="sigCheck" class="text">Lembrar-me</label>
                         </div>
 
-                        <a href="#" class="text">Esqueceu a senha?</a>
 
                     </div>
 
                     <div class="input-field button">
-                        <input type="button" id="create-account" value="Criar Contar">
+                        <input type="button" id="create-account" value="Criar Conta">
                     </div>
 
                 </form> <!-- Fim do Formulario-->
@@ -141,6 +145,6 @@
 
 
     <script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
-    <script src="src/app.js"></script>
+    <script src="src/app.js" ></script>
 </body>
 </html>

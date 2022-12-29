@@ -27,7 +27,7 @@ body{
 
 }
 
-/*Mensagem de erro*/
+/* Mensagem de erro */
 
 .alert{
    background-color: #ffdb9b;
@@ -191,6 +191,11 @@ body{
    margin-top: 30px;
 }
 
+.input-field #sigPwd{
+   padding-left: 35px;
+   padding-right: 80px;
+}
+
 .input-field input{
    position: absolute;
    height: 100%;
@@ -209,9 +214,10 @@ body{
    border-bottom-color: #4070f4;
 }
 
- .input-field input:is(:focus, :valid) ~ i{
+.input-field input:is(:focus, :valid) ~ i{
    color: #4070f4;
 }
+
 
  .input-field i{
    position: absolute;
@@ -428,4 +434,47 @@ position: relative;
    transition: 0.5s;
    opacity: 1;
    pointer-events: all;
+}
+
+/* Informativo da senha */
+
+.input-field .pwd-Info{
+   right: 35px;
+   cursor: pointer;
+   padding: 10px;
+   color: #ffa502;
+}
+
+#tooltipText{
+   position: absolute;
+   right: -27%;
+   top: 0;
+   font-size: 14px;
+   transform: translateX(-50%);
+   background-color: #ffdb9b;
+   color: #ce8500;
+   white-space: nowrap;
+   padding: 10px 15px;
+   border-radius: 7px;
+   visibility: visible;
+   opacity: 0;
+   transition: opacity 0.5 ease;
+   pointer-events: none;
+
+}
+
+#tooltipText::before{
+   content: "";
+   position: absolute;
+   left: 60%;
+   top: 100%;
+   transform: translateX(-50%);
+   border: 15px solid;
+   border-color: #ffdb9b #0000 #0000 #0000 ;
+}
+
+.tooltip:hover #tooltipText{
+   top: -100%;
+   visibility: visible;
+   opacity: 1;
 }

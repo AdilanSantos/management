@@ -11,7 +11,13 @@ const copyIcon = document.querySelector('.password-box .copy-icon');
 const rangeInput = document.querySelector('.range-box input');
 const sliderNumber = document.querySelector('.range-box .slider-number');
 const generateButton = document.querySelector('.generate-button');
-let allCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789^!$%&|[](){}:;.,*+-#@<>~";
+
+const aCaracters = Array.from(Array(26)).map((_, i)=> i + 97);
+const aLowercaseCaracters = aCaracters.map((item) => String.fromCharCode(item));
+const aUppercaseCaracters = aLowercaseCaracters.map((item) => item.toUpperCase());
+
+const aNumbers =[0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+const aSymbols = ["!", "@", "#", "$", "%"];
 
 /* Constantes para exibir o Modal de Gerar Senha */
 const openModal = document.querySelector('.showPwGen');
@@ -50,12 +56,15 @@ login.addEventListener("click", ()=>{
 
 /* Gerador de Senha */
 
+let aAllCaracters = [];
+
+aAllCaracters = aNumbers.concat(aLowercaseCaracters).concat(aUppercaseCaracters).concat(aSymbols);
 const generatePassword = () =>{
     let newPassword = "";
 
     for (let i = 0; i < rangeInput.value; i++){
-        let randomNumbers = Math.floor(Math.random()* allCharacters.length);
-        newPassword += allCharacters[randomNumbers];
+        const randomNumbers = Math.floor(Math.random() * aAllCaracters.length);
+        newPassword += aAllCaracters[randomNumbers];
         
     }
     passwordInput.value = newPassword;
@@ -85,41 +94,114 @@ const toggleModal = ()=>{
 });
 
 /* Validação Login */
-
 $('#login').click(function(){
-    var sLoginEmail = $('#logEmail').val();//Obtendo os dados preenchidos
-    var sLoginPwd = $('#logEmail').val();//Obtendo os dados preenchidos
+    //Obtendo valores do Campo de Login
+    var sLoginEmail = $('#logEmail').val().trim();
+    var sLoginPwd = $('#logPwd').val().trim();
 
-    jData = '{"email":"'+sLoginEmail+'","password":"'+sLoginPwd+'"}'// Corpo da Requisição
+    //Validando se é um Email válido
+    if ( !validEmail(sLoginEmail) ) {
+        $("#message").html('Aviso: Insira um Email válido!')//Message Error
+        openMessageError();
+    }
+    //Validando se senha está preenchida
+    else if (sLoginPwd == '') {
+        $("#message").html('Aviso: Preencha o campo de Senha!')//Message Error
+        openMessageError();
+    }else{
 
-    //Requisição Ajax encaminhando os dados de Login
-    $.ajax({
-        url: "api/account.php?action=login",
-        contentType: "application/json; charset=utf-8",
-        type: "POST",
-        crossDomain: true,
-        data: '{"email":"'+sLoginEmail+'","password":"'+sLoginPwd+'"}'
-    }).done(function(response){
-        if (response.success == true) {
-            console.log('Mensagem com Sucesso')
-        }else{
-            $("#message").html(response.msg);//Inserido mensagem de erro no HTML
-            $(".alert").removeClass('hide');//removendo classe para exibir alerta
-            $(".alert").addClass('show');
-            $(".alert").addClass('showAlert');
+        jData = '{"email":"'+sLoginEmail+'","password":"'+sLoginPwd+'"}'// Corpo da Requisição
 
-            //Função para fechar mensagem após 5 segundos
-            setTimeout(function(){
-                $(".alert").addClass("hide");
-                $(".alert").removeClass("show");
-            }, 5000);
-
-        }
-    }).fail(function(jqXHR, StatusCode){
-        console.log(jqXHR)
-    })
+        //Requisição Ajax encaminhando os dados de Login
+        $.ajax({
+            url: "api/account.php?action=login",
+            contentType: "application/json; charset=utf-8",
+            type: "POST",
+            data: jData
+        }).done(function(response){
+            if (response.success == true) {
+                console.log('Mensagem com Sucesso')
+            }else{
+                
+                $("#message").html(response.msg);//Message Error
+                openMessageError();
+            }
+        }).fail(function(jqXHR, StatusCode){
+            console.log(jqXHR)
+        })
+    }
     
 });
+
+$('#create-account').click(function(){
+    //Obtendo valores do Campo de Registro
+    var sSignupName =$('#sigName').val().trim();
+    var sSignupEmail = $('#sigEmail').val().trim();
+    var sSignupPwd = $('#sigPwd').val().trim();
+    var sSignupConfirmPwd = $('#sigConfirmPwd').val().trim();
+
+    //Validações de Campos
+    if (sSignupName == '') {
+        $("#message").html('Aviso: Preencha o campo Nome!')//Message Error
+        openMessageError();
+    } else if ( !validEmail(sSignupEmail) ){
+        $("#message").html('Aviso: Insira um Email válido!')//Message Error
+        openMessageError();
+    } else if(sSignupPwd == ''){
+        $("#message").html('Aviso: Preencha o campo de Senha!')//Message Error
+        openMessageError();
+    } else if(sSignupConfirmPwd == ''){
+        $("#message").html('Aviso: Preencha o campo de Confirmar Senha!')//Message Error
+        openMessageError();
+    }else if(sSignupPwd != sSignupConfirmPwd){
+        $("#message").html('Aviso: As senhas não coincidem!')//Message Error
+        openMessageError();
+    } else{
+        // Corpo da Requisição
+        jData = '{"name":"'+sSignupName+'", "email":"'+sSignupEmail+'","password":"'+sSignupPwd+'","confirmPassword":"'+sSignupConfirmPwd+'"}'
+
+        //Requisição Ajax encaminhando os dados de Login
+        $.ajax({
+            url: "api/account.php?action=create",
+            contentType: "application/json; charset=utf-8",
+            type: "POST",
+            data: jData
+        }).done(function(response){
+            console.log(response)
+            if (response.success == true) {
+                console.log('Mensagem com Sucesso')
+            }else{
+                
+                $("#message").html(response.msg);//Message Error
+                openMessageError();
+            }
+        }).fail(function(jqXHR, StatusCode){
+            console.log(StatusCode);
+            console.log(jqXHR);
+            $("#message").html('Erro: Não foi possivel realizar a ação.');//Message Error
+            openMessageError();
+        })
+    }
+})
+
+/* Função para abrir mensagem de erro */
+function openMessageError(){
+    $(".alert").removeClass('hide');//removendo classe para exibir alerta
+    $(".alert").addClass('show');
+    $(".alert").addClass('showAlert');
+
+    //Função para fechar mensagem após 5 segundos
+    setTimeout(function(){
+        $(".alert").addClass("hide");
+        $(".alert").removeClass("show");
+    }, 5000);
+}
+
+/* Função para validar o Email */
+function validEmail(email) {
+    var regex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+    return regex.test(email);
+}
 
 /* Função para fechar mensagem de erro */
 $(".close-message").click(function(){
