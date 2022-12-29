@@ -402,7 +402,7 @@ position: relative;
 /* Modall*/
 
 #fade{
-   position: fixed;
+   position: absolute;
    top: 0;
    left: 0;
    width: 100%;
@@ -412,7 +412,7 @@ position: relative;
 }
 
 #modal{
-   position: fixed;
+   position: absolute;
    left: 50%;
    top: 50%;
    transform: translate(-50%,-50%);
