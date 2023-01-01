@@ -1,7 +1,7 @@
 <?php
 
 
-
+/* Conexão com o BD */
 function dbConnection(){
     $hostname = 'localhost';
     $dataBase = 'management';
@@ -13,6 +13,13 @@ function dbConnection(){
         return("Falha ao conectar: (". $mysqli->connect_errno .") ". $mysqli->connect_error);
     }
     return $mysqli;
+}
+
+/* Escape String */
+
+function escapeString($string){
+    $scapeString = mysqli_escape_string(dbConnection(),$string);
+    return $scapeString;
 }
 
 /*Inserir, Atualizar e Deletar*/

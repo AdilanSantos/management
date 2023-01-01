@@ -110,7 +110,7 @@ $('#login').click(function(){
         openMessageError();
     }else{
 
-        jData = '{"email":"'+sLoginEmail+'","password":"'+sLoginPwd+'"}'// Corpo da Requisição
+        jData = '{"email":"'+sLoginEmail+'","password":"'+sLoginPwd+'", "type": "default"}'// Corpo da Requisição
 
         //Requisição Ajax encaminhando os dados de Login
         $.ajax({
@@ -121,6 +121,8 @@ $('#login').click(function(){
         }).done(function(response){
             if (response.success == true) {
                 console.log('Mensagem com Sucesso')
+                //Direcionando para pagina Logado
+                window.location.href = 'logged.html';
             }else{
                 
                 $("#message").html(response.msg);//Message Error
@@ -140,6 +142,12 @@ $('#create-account').click(function(){
     var sSignupPwd = $('#sigPwd').val().trim();
     var sSignupConfirmPwd = $('#sigConfirmPwd').val().trim();
 
+    if( $('#sigCheck').is(':checked') ){
+        var sSigCheck = 1;
+    }else{
+        var sSigCheck = 0;
+    }
+
     //Validações de Campos
     if (sSignupName == '') {
         $("#message").html('Aviso: Preencha o campo Nome!')//Message Error
@@ -153,14 +161,17 @@ $('#create-account').click(function(){
     } else if(sSignupConfirmPwd == ''){
         $("#message").html('Aviso: Preencha o campo de Confirmar Senha!')//Message Error
         openMessageError();
+    } else if(sSignupPwd.length < 6){
+        $("#message").html('Aviso: A senha deve conter no mínimo 6 caracteres!')//Message Error
+        openMessageError();
     }else if(sSignupPwd != sSignupConfirmPwd){
         $("#message").html('Aviso: As senhas não coincidem!')//Message Error
         openMessageError();
     } else{
         // Corpo da Requisição
-        jData = '{"name":"'+sSignupName+'", "email":"'+sSignupEmail+'","password":"'+sSignupPwd+'","confirmPassword":"'+sSignupConfirmPwd+'"}'
-
-        //Requisição Ajax encaminhando os dados de Login
+        jData = '{"name":"'+sSignupName+'", "email":"'+sSignupEmail+'","password":"'+sSignupPwd+'","confirmPassword":"'+sSignupConfirmPwd+'", "sigCheck": "'+sSigCheck+'"}'
+        console.log(jData)
+        //Requisição Ajax encaminhando os dados de Registro
         $.ajax({
             url: "api/account.php?action=create",
             contentType: "application/json; charset=utf-8",
@@ -169,7 +180,9 @@ $('#create-account').click(function(){
         }).done(function(response){
             console.log(response)
             if (response.success == true) {
-                console.log('Mensagem com Sucesso')
+                
+                window.location.href = 'logged.html';
+
             }else{
                 
                 $("#message").html(response.msg);//Message Error
@@ -177,7 +190,6 @@ $('#create-account').click(function(){
             }
         }).fail(function(jqXHR, StatusCode){
             console.log(StatusCode);
-            console.log(jqXHR);
             $("#message").html('Erro: Não foi possivel realizar a ação.');//Message Error
             openMessageError();
         })
@@ -208,3 +220,58 @@ $(".close-message").click(function(){
     $(".alert").addClass("hide");
     $(".alert").removeClass("show");
 })
+
+
+/* Função botão Google */
+
+//Função para redirecionar o usuario quando realizar Login Google
+function handleCredentialResponse(response) {
+    console.log("Encoded JWT ID token: " + JSON.stringify(response));
+    jResponseGoogle = parseJwt(response.credential);
+    console.log(jResponseGoogle.email)
+    jData = '{"email":"'+jResponseGoogle.email+'", "type":"google"}'
+
+    $.ajax({
+        url: "api/account.php?action=login",
+        contentType: "application/json; charset=utf-8",
+        type: "POST",
+        data: jData
+    }).done(function(response){
+        if (response.success == true) {
+            console.log('Mensagem com Sucesso')
+            //Direcionando para pagina Logado
+            window.location.href = 'logged.html';
+        }else{
+            $("#message").html(response.msg);//Message Error
+            openMessageError();
+        }
+    }).fail(function(jqXHR, StatusCode){
+        console.log(jqXHR)
+    })
+    
+}
+
+
+//Função para Login Google
+window.onload = function () {
+  google.accounts.id.initialize({
+    client_id: "883974841374-kaacq926614f0l4h5pgit23ovjdu30u6.apps.googleusercontent.com",
+    callback: handleCredentialResponse
+  });
+  google.accounts.id.renderButton(
+    document.getElementById("login-Google"),
+    { theme: "outline", size: "large" }  // customization attributes
+  );
+  google.accounts.id.prompt(); // also display the One Tap dialog
+}
+
+//Função para decodificar JWT retorno do Google
+function parseJwt (token) {
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    return JSON.parse(jsonPayload);
+}
