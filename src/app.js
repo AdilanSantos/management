@@ -226,9 +226,7 @@ $(".close-message").click(function(){
 
 //Função para redirecionar o usuario quando realizar Login Google
 function handleCredentialResponse(response) {
-    console.log("Encoded JWT ID token: " + JSON.stringify(response));
     jResponseGoogle = parseJwt(response.credential);
-    console.log(jResponseGoogle.email)
     jData = '{"email":"'+jResponseGoogle.email+'", "type":"google"}'
 
     $.ajax({
