@@ -209,18 +209,17 @@ function openMessageError(){
     }, 5000);
 }
 
-/* Função para validar o Email */
-function validEmail(email) {
-    var regex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
-    return regex.test(email);
-}
-
 /* Função para fechar mensagem de erro */
 $(".close-message").click(function(){
     $(".alert").addClass("hide");
     $(".alert").removeClass("show");
 })
 
+/* Função para validar o Email */
+function validEmail(email) {
+    var regex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+    return regex.test(email);
+}
 
 /* Função botão Google */
 

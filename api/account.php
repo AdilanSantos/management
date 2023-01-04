@@ -1,7 +1,8 @@
 <?php
 
-include('../inc/dbconfig.php');
-include('../inc/functions.php');
+require('../inc/dbconfig.php');
+require('../inc/functions.php');
+require('../phpmail/sendEmail.php');
 
 header("Content-Type: application/json");
 
@@ -152,6 +153,56 @@ switch ($_GET['action']) {
         }
     
     case 'edit':
+        break;
+
+    case 'recoveryPassword':
+
+        $sRecoveryEmail = escapeString( trim($jContent['email']) );
+
+        if (!validadeEmail($sRecoveryEmail)) {
+            $jResponse['success'] = false;
+            $jResponse['msg'] = 'Aviso: Insira um Email válido!';
+            echo(json_encode($jResponse));
+            break;
+
+        } else{
+            $qConsultUser = (runQuerySelect("SELECT * FROM account WHERE email='{$sRecoveryEmail}'"));
+
+                if(count($qConsultUser) <= 0){
+                    $jResponse['success'] = false;
+                    $jResponse['msg'] = 'Aviso: Email não registrado!';
+                    echo(json_encode($jResponse));
+                    break;
+
+                }else{
+                    #Gerando Hash para token
+                    $sha1Token = gerarHash(14);
+                    #Atualizando Usuario
+                    $qUpdateUser = (runQueryIUD("UPDATE account  SET 'token'= '{$sha1Token}' WHERE email='{$sRecoveryEmail}' "));
+
+                    #Enviando Email
+                    $jSendEmail = sendEmail($qConsultUser[0]['email'], $qConsultUser[0]['name'], $sha1Token);
+
+                    #Validando se Email foi enviado
+                    if ($jSendEmail['success'] == false) {
+
+                        $jResponse['success'] = $jSendEmail['success'];
+                        $jResponse['msg'] = $jSendEmail['msg'];
+                        echo(json_encode($jResponse));
+                    }else{
+                        $jResponse['success'] = $jSendEmail['success'];
+                        $jResponse['msg'] = $jSendEmail['msg'];
+                        echo(json_encode($jResponse));
+                        break;
+                    }
+                    
+                }
+        }
+
+        break;
+    
+    case 'changePassword':
+
         break;
 
     default:
