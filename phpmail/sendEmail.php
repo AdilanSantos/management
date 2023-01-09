@@ -18,7 +18,7 @@ function sendEmail($sEmail, $sName, $sha1Token){
         $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
         $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
         $mail->Username   = 'notifymanagementapp@gmail.com';                     //SMTP username
-        $mail->Password   = 'succccserfmbwejk';                               //SMTP password
+        $mail->Password   = 'vsqunzgcdhlywwoq';                               //SMTP password
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
         $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
@@ -33,7 +33,7 @@ function sendEmail($sEmail, $sName, $sha1Token){
         $mail->Subject = 'Esqueci minha Senha - App Management';
         $mail->Body    = "Ola $sName, tudo bem? <br>
         Você realizou a solicitação de senha em nosso Portal. Para confirmarmos que foi realizado por você mesmo, precisamos redefini-la, para isso clique no Link abaixo:<br>
-        <a href='http://localhost:8080/management/ChangePasswordLogin?tkn=$sha1Token'>CLIQUE AQUI PARA REDEFINIR SUA SENHA</a>.";
+        <a href='http://localhost:8080/management/ChangePassword?tkn=$sha1Token'>CLIQUE AQUI PARA REDEFINIR SUA SENHA</a>.";
 
         $mail->send();
 
