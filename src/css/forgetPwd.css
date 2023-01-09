@@ -3,6 +3,7 @@
 :root{
     --primary: #4070f4;
     --primaryHover: #265df2;
+    --darkGrey: #333;
     --light: #fff;
     --grey: #aaa;
     --silver: #707070
@@ -21,7 +22,121 @@ body{
     align-items: center;
     justify-content: center;
     background-color: var(--primary);
+    overflow: hidden;
 }
+/*Animação do Modal*/
+
+
+@keyframes show_slide{
+   0%{
+      transform: translateX(100%);
+   }
+
+   40%{
+      transform: translateX(-10%);
+   }
+   
+   80%{
+      transform: translateX(0%);
+   }
+
+   100%{
+      transform: translateX(0px);
+   }
+}
+
+/* Modal de Alerta */
+
+#modal.hide,
+#fade.hide{
+   opacity: 0;
+   pointer-events: none;
+}
+
+#fade,
+#modal{
+   transition: 0.5s;
+   opacity: 1;
+   pointer-events: all;
+}
+
+#modal{
+   position: absolute;
+   left: 50%;
+   top: 50%;
+   transform: translate(-50%,-50%);
+   z-index: 10;
+   text-align: center;
+}
+
+.alert-box{
+   position: relative;
+   max-width: 350px;
+   width: 100%;
+   background: #fff;
+   border-radius: 12px;
+   padding: 30px 25px;
+}
+
+#fade{
+   position: absolute;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   background-color: rgba(0, 0, 0, 0.6);
+   z-index: 5;
+}
+
+.alert-box .title{
+   position: relative;
+   font-size: 23px;
+   font-weight: 600;
+}
+
+.alert-box .title::before{
+   content: '';
+   position: absolute;
+   left: 0;
+   bottom: 0;
+   height: 3px;
+   width: 30px;
+   background-color: #4070f4;
+   border-radius: 25px;
+}
+
+.alert-box .hidePwGen{
+   position: absolute;
+   right: 10px;
+   top: 5px;
+   color: #D00000;
+   font-size: 30px;
+   cursor: pointer;
+}
+
+.alert-box .close-alertBox{
+   width: 100%;
+   color: #fff;
+   padding: 12px 0;
+   margin-top: 20px;
+   background: #265df2;
+   border: none;
+   border-radius: 8px;
+   cursor: pointer;
+   transition: all 0.2s ease;
+}
+
+.alert-box .hidePwGen:hover{
+   color: #FF1313;
+}
+
+.message-box{
+   margin-top: 10px;
+}
+
+/*Modal*/
+
+
 
 .wrapper{
     position: relative;
@@ -31,6 +146,7 @@ body{
     border-radius: 12px;
     padding: 30px 25px;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    animation: show_slide 1s ease forwards;
 }
 
 .wrapper .title{
@@ -92,23 +208,61 @@ body{
     background-color: var(--primaryHover);
 }
 
+/* Icone de loading */
+.c-loader.hide{
+   opacity: 0;
+}
 
+.c-loader{
+   opacity: 1;
+   position: absolute;
+   margin-top: 30px;
+   left: 100px;
+   animation: is-rotating 1s infinite;
+   width:25px;
+   height: 25px;
+   border: 3px solid #e5e5e5;
+   border-radius:50%;
+   border-top-color: var(--grey);
+  
+ }
+ 
+ @keyframes is-rotating{
+   to{
+     transform: rotate(1turn);
+   }
+ }
+
+.loginBtn{
+   margin-top: 5px;
+   text-align: center;
+}
+
+.loginBtn .text{
+   color: var(--darkGrey);
+   font-size: 14px;
+}
+
+.loginBtn a.text{
+   color: var(--primary);
+   text-decoration: none;
+}
 /* Mensagem de erro */
 
 .alert{
-    background-color: #ffdb9b;
-    padding: 20px 40px;
-    min-width: 420px;
-    position: absolute;
-    right: 0px;
-    top: 10px;
-    overflow: hidden;
-    border-radius: 4px;
-    border-left: 8px solid #ffa502;  
-    opacity: 0;
-    pointer-events: none;
-    z-index: 10;
- }
+   background-color: #ffdb9b;
+   padding: 20px 40px;
+   min-width: 370px;
+   position: absolute;
+   right: 0px;
+   top: 10px;
+   overflow: hidden;
+   border-radius: 4px;
+   border-left: 8px solid #ffa502;  
+   opacity: 0;
+   pointer-events: none;
+   z-index: 10;
+}
  
  .alert.showAlert{
     opacity: 1;
@@ -117,24 +271,6 @@ body{
  
  .alert.show{
     animation: show_slide 1s ease forwards;
- }
- 
- @keyframes show_slide{
-    0%{
-       transform: translateX(100%);
-    }
- 
-    40%{
-       transform: translateX(-10%);
-    }
-    
-    80%{
-       transform: translateX(0%);
-    }
- 
-    100%{
-       transform: translateX(-10px);
-    }
  }
  
  .alert.hide{

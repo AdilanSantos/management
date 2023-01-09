@@ -101,12 +101,12 @@ $('#login').click(function(){
 
     //Validando se é um Email válido
     if ( !validEmail(sLoginEmail) ) {
-        $("#message").html('Aviso: Insira um Email válido!')//Message Error
+        $("#message").html('Insira um Email válido!')//Message Error
         openMessageError();
     }
     //Validando se senha está preenchida
     else if (sLoginPwd == '') {
-        $("#message").html('Aviso: Preencha o campo de Senha!')//Message Error
+        $("#message").html('Preencha o campo de Senha!')//Message Error
         openMessageError();
     }else{
 
@@ -150,27 +150,27 @@ $('#create-account').click(function(){
 
     //Validações de Campos
     if (sSignupName == '') {
-        $("#message").html('Aviso: Preencha o campo Nome!')//Message Error
+        $("#message").html('Preencha o campo Nome!')//Message Error
         openMessageError();
     } else if ( !validEmail(sSignupEmail) ){
-        $("#message").html('Aviso: Insira um Email válido!')//Message Error
+        $("#message").html('Insira um Email válido!')//Message Error
         openMessageError();
     } else if(sSignupPwd == ''){
-        $("#message").html('Aviso: Preencha o campo de Senha!')//Message Error
+        $("#message").html('Preencha o campo de Senha!')//Message Error
         openMessageError();
     } else if(sSignupConfirmPwd == ''){
-        $("#message").html('Aviso: Preencha o campo de Confirmar Senha!')//Message Error
+        $("#message").html('Preencha o campo de Confirmar Senha!')//Message Error
         openMessageError();
     } else if(sSignupPwd.length < 6){
-        $("#message").html('Aviso: A senha deve conter no mínimo 6 caracteres!')//Message Error
+        $("#message").html('A senha deve conter no mínimo 6 caracteres!')//Message Error
         openMessageError();
     }else if(sSignupPwd != sSignupConfirmPwd){
-        $("#message").html('Aviso: As senhas não coincidem!')//Message Error
+        $("#message").html('As senhas não coincidem!')//Message Error
         openMessageError();
     } else{
         // Corpo da Requisição
         jData = '{"name":"'+sSignupName+'", "email":"'+sSignupEmail+'","password":"'+sSignupPwd+'","confirmPassword":"'+sSignupConfirmPwd+'", "sigCheck": "'+sSigCheck+'"}'
-        console.log(jData)
+        
         //Requisição Ajax encaminhando os dados de Registro
         $.ajax({
             url: "api/account.php?action=create",
@@ -257,7 +257,7 @@ window.onload = function () {
   });
   google.accounts.id.renderButton(
     document.getElementById("login-Google"),
-    { theme: "outline", size: "large" }  // customization attributes
+    { theme: "outline", size: "large", width:"330" }  // customization attributes
   );
   google.accounts.id.prompt(); // also display the One Tap dialog
 }
@@ -272,3 +272,22 @@ function parseJwt (token) {
 
     return JSON.parse(jsonPayload);
 }
+
+/*Login Facebook */
+
+window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '573449594154606',
+      xfbml      : true,
+      version    : 'v15.0'
+    });
+    FB.AppEvents.logPageView();
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "https://connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));

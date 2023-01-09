@@ -1,5 +1,20 @@
+//Constantes para fechar o Modal de Alerta
+const closeModal = document.querySelector('.hidePwGen');
+const modal = document.querySelector('#modal');
+const fade = document.querySelector('#fade');
+const buttonCloseModal = document.querySelector('.close-alertBox')
 
+//Loader icon
+const loaderIcon = document.querySelector('.c-loader')
 
+//Modal de Alerta
+const toggleModal = ()=>{
+    [modal, fade].forEach((el)=> el.classList.toggle('hide'));
+}
+
+[closeModal,buttonCloseModal, modal, fade].forEach((el)=>{
+    el.addEventListener('click',()=> toggleModal());
+});
 
 /* Ajax Reocvery Password */
 $('#sendEmail').click(function(){
@@ -8,13 +23,16 @@ $('#sendEmail').click(function(){
 
     //Validando se é um Email válido
     if ( !validEmail(sRecoveryEmail) ) {
-        $("#message").html('Aviso: Insira um Email válido!')//Message Error
+        $("#message").html('Insira um Email válido!')//Message Error
         openMessageError();
     }else{
+        loaderIcon.classList.toggle('hide');
+        $('#sendEmail').val('Enviando Email...');
+
 
         jData = '{"email":"'+sRecoveryEmail+'"}'// Corpo da Requisição
 
-        //Requisição Ajax encaminhando os dados de Login
+        //Requisição Ajax encaminhando os dados para recuperar Senha
         $.ajax({
             url: "api/account.php?action=recoveryPassword",
             contentType: "application/json; charset=utf-8",
@@ -22,11 +40,13 @@ $('#sendEmail').click(function(){
             data: jData
         }).done(function(response){
             if (response.success == true) {
-                console.log('Mensagem com Sucesso')
-                $("#message").html(response.msg);
-                openMessageError();
+                loaderIcon.classList.toggle('hide')
+                toggleModal()
+                $('#sendEmail').val('Alterar Senha');
+
             }else{
-                
+                $('#sendEmail').val('Alterar Senha');
+                loaderIcon.classList.toggle('hide')
                 $("#message").html(response.msg);//Message Error
                 openMessageError();
             }

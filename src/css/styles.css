@@ -32,7 +32,7 @@ body{
 .alert{
    background-color: #ffdb9b;
    padding: 20px 40px;
-   min-width: 420px;
+   min-width: 370px;
    position: absolute;
    right: 0px;
    top: 10px;
@@ -67,7 +67,7 @@ body{
    }
 
    100%{
-      transform: translateX(-10px);
+      transform: translateX(0px);
    }
 }
 
@@ -136,7 +136,7 @@ body{
 .container .forms{
    display: flex;
    align-items: center;
-   height: 440px;
+   height: 470px;
    width: 200%;
    transition: height 0.2 ease;
 }
@@ -250,16 +250,30 @@ body{
    margin-top: 20px;
 }
 
-.checkbox-text .checkbox-content{
-   display: flex;
-   align-items: center;
+
+
+.login-social{
+   margin-top: 10px;
 }
 
+.login-social div{
+   margin-top: 5px;
+   align-items: center;
+   justify-content: center;
+   display: flex;
+}
+
+/*
 .checkbox-content input{
    margin: 0 8px -2px 4px;
    accent-color: #4070f4;
 }
 
+.checkbox-text .checkbox-content{
+   display: flex;
+   align-items: center;
+}
+*/
 .form .text{
    color: #333;
    font-size: 14px;
@@ -294,7 +308,7 @@ body{
 }
 
 .form .login-signup{
-   margin-top: 30px;
+   margin-top: 15px;
    text-align: center;
 }
 

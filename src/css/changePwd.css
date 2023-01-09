@@ -1,0 +1,463 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+:root{
+    --primary: #4070f4;
+    --primaryHover: #265df2;
+    --light: #fff;
+    --grey: #aaa;
+    --silver: #707070
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body{
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--primary);
+}
+.loginBtn{
+   margin-top: 5px;
+   text-align: center;
+}
+
+.loginBtn .text{
+   color: var(--darkGrey);
+   font-size: 14px;
+}
+
+.loginBtn a.text{
+   color: var(--primary);
+   text-decoration: none;
+}
+
+
+/*Menu de senha*/
+
+.wrapper{
+    position: absolute;
+    max-width: 400px;
+    width: 100%;
+    background: var(--light);
+    border-radius: 12px;
+    padding: 30px 25px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+.wrapper .title{
+    position: relative;
+    font-size: 27px;
+    font-weight: 600;
+}
+
+.wrapper .title::before{
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 3px;
+    width: 30px;
+    background-color: #4070f4;
+    border-radius: 25px;
+}
+
+.wrapper .changePwd-box{
+    margin-top: 20px;
+    position: relative;
+    height:220px;
+}
+
+.wrapper .input-field{
+   position: relative;
+   height: 50px;
+   width: 100%;
+   margin-top: 30px;
+}
+
+.input-field #recPwd{
+   padding-left: 35px;
+   padding-right: 80px;
+}
+
+.input-field input{
+   position: absolute;
+   height: 100%;
+   width: 100%;
+   padding: 0 35px;
+   border: none;
+   outline: none;
+   font-size: 16px;
+   border-bottom: 2px solid #ccc;
+   border-top: 2px solid transparent;
+   transition: all 0.2 ease;
+
+}
+
+ .input-field input:is(:focus, :valid){
+   border-bottom-color: #4070f4;
+}
+
+.input-field input:is(:focus, :valid) ~ i{
+   color: #4070f4;
+}
+
+
+ .input-field i{
+   position: absolute;
+   top: 50%;
+   transform: translateY(-50%);
+   color: #999;
+   font-size: 23px;
+}
+
+ .input-field i.icon{
+   left: 0;
+}
+
+.input-field i.showHidePw{
+   right: 0;
+   cursor: pointer;
+   padding: 10px;
+}
+
+.input-field i.showPwGen{
+   right: 0;
+   cursor: pointer;
+   padding: 10px;
+}
+
+.wrapper .changePwd-Btn{
+    width: 100%;
+    padding: 12px 0;
+    color: var(--light);
+    font-size: 16px;
+    background: var(--primary);
+    border: none;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.changePwd-Btn:hover{
+    background-color: var(--primaryHover);
+}
+
+
+/* Gerar Senha */
+
+.wrapper-PwdGen{
+    position: relative;
+    max-width: 350px;
+    width: 100%;
+    background: #fff;
+    border-radius: 12px;
+    padding: 30px 25px;
+ }
+ 
+ .wrapper-PwdGen .password-box{
+    position: relative;
+    height: 50px;
+    margin-top: 30px;
+ }
+ 
+ .password-box input{
+    height: 100%;
+    width: 100%;
+    border-radius: 8px;
+    padding: 0 45px 0 15px;
+    border: 1px solid #aaa;
+    background-color: transparent;
+ }
+ 
+ 
+ .password-box .copy-icon{
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    color: #707070;
+    font-size: 20px;
+    cursor: pointer;
+    transform: translateY(-50%);
+ }
+ 
+ .wrapper-PwdGen .hidePwGen{
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    color: #D00000;
+    font-size: 30px;
+    cursor: pointer;
+ }
+ 
+ .wrapper-PwdGen .hidePwGen:hover{
+    color: #FF1313;
+ }
+ 
+ .copy-icon:hover{
+    color: #4070f4;
+ }
+ 
+ .wrapper-PwdGen .range-box{
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+ }
+ 
+ .range-box input{
+    width: 100%;
+    height: 5px;
+    accent-color: #4070f4;
+    cursor: pointer;
+ }
+ 
+ .range-box .slider-number{
+    min-width: 30px;
+    text-align: right;
+    font-size: 17px;
+    color: #707070;
+ }
+ 
+ .wrapper-PwdGen .generate-button{
+    width: 100%;
+    color: #fff;
+    padding: 12px 0;
+    margin-top: 20px;
+    background: #265df2;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+ }
+ .wrapper-PwdGen .title{
+ position: relative;
+   font-size: 23px;
+   font-weight: 600;
+ }
+ 
+ .wrapper-PwdGen .title::before{
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 3px;
+    width: 30px;
+    background-color: #4070f4;
+    border-radius: 25px;
+ }
+ 
+ /* Modall*/
+ 
+ #fade{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 5;
+ }
+ 
+ #modal{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 10;
+ }
+ 
+ #modal.hide,
+ #fade.hide{
+    opacity: 0;
+    pointer-events: none;
+ }
+ 
+ .showPwGen{
+    cursor: pointer;
+ }
+ 
+ #fade,
+ #modal{
+    transition: 0.5s;
+    opacity: 1;
+    pointer-events: all;
+ }
+ 
+ /* Informativo da senha */
+ 
+ .input-field .pwd-Info{
+    right: 35px;
+    cursor: pointer;
+    padding: 10px;
+    color: #ffa502;
+ }
+ 
+ #tooltipText{
+    position: absolute;
+    right: -27%;
+    top: 0;
+    font-size: 14px;
+    transform: translateX(-50%);
+    background-color: #ffdb9b;
+    color: #ce8500;
+    white-space: nowrap;
+    padding: 10px 15px;
+    border-radius: 7px;
+    visibility: visible;
+    opacity: 0;
+    transition: opacity 0.5 ease;
+    pointer-events: none;
+ 
+ }
+ 
+ #tooltipText::before{
+    content: "";
+    position: absolute;
+    left: 60%;
+    top: 100%;
+    transform: translateX(-50%);
+    border: 15px solid;
+    border-color: #ffdb9b #0000 #0000 #0000 ;
+ }
+ 
+ .tooltip:hover #tooltipText{
+    top: -100%;
+    visibility: visible;
+    opacity: 1;
+ }
+
+/* Mensagem de erro */
+
+.alert{
+    background-color: #ffdb9b;
+    padding: 20px 40px;
+    min-width: 420px;
+    position: absolute;
+    right: 0px;
+    top: 10px;
+    overflow: hidden;
+    border-radius: 4px;
+    border-left: 8px solid #ffa502;  
+    opacity: 0;
+    pointer-events: none;
+    z-index: 10;
+ }
+ 
+ .alert.showAlert{
+    opacity: 1;
+    pointer-events: auto;
+ }
+ 
+ .alert.show{
+    animation: show_slide 1s ease forwards;
+ }
+ 
+ @keyframes show_slide{
+    0%{
+       transform: translateX(100%);
+    }
+ 
+    40%{
+       transform: translateX(-10%);
+    }
+    
+    80%{
+       transform: translateX(0%);
+    }
+ 
+    100%{
+       transform: translateX(-10px);
+    }
+ }
+ 
+ .alert.hide{
+    animation: hide_slide 1s ease forwards;
+ }
+ 
+ @keyframes hide_slide{
+    0%{
+       transform: translateX(-10px);
+    }
+ 
+    40%{
+       transform: translateX(0%);
+    }
+    
+    80%{
+       transform: translateX(-10%);
+    }
+ 
+    100%{
+       transform: translateX(100%);
+    }
+ }
+ 
+ 
+ .alert .uil-exclamation-circle{
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #ce8500;
+    font-size: 30px;
+ }
+ 
+ .alert .alert-message{
+    padding: 0 20px;
+    font-size: 16px;
+    color: #ce8500;
+ }
+ 
+ .alert .close-message{
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #ffd080;
+    padding: 20px 18px;
+    cursor: pointer;
+ }
+ 
+ .close-message:hover{
+    background: #ffc766;
+ }
+ 
+ .close-message .uil-multiply{
+    color: #ce8500;
+    font-size: 22px;
+    line-height: 40px;
+}
+
+.wrapper.hide{
+    opacity: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+/*Modal de Erro */
+
+.messageError.hide{
+    opacity: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.messageError.active{
+    position: absolute;
+    max-width: 500px;
+    width: 100%;
+    background: var(--light);
+    border-radius: 12px;
+    padding: 30px 25px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+.messageError.active h1{
+    text-align: center;
+    font-size: 27px;
+}
