@@ -1,0 +1,228 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&display=swap');
+
+:root{
+    --primary-color: #0E4BF1;
+    --primaryHover: #0C40CF;
+    --panel-color: #FFF;
+    --text-color: #000;
+    --black-light-color: #707070;
+    --border-color: #e6e5e5;
+    --toggle-color: #DDD;
+    --box1-color: #4DA3FF;
+    --box2-color: #FFE6AC;
+    --box3-color: #E7D1FC;
+    --title-icon-color: #fff;
+    --red: #f44336;
+    --redHover: #F11C0D;
+
+    /*  Transition */
+    --tran-05: all 0.5s ease;
+    --tran-03: all 0.3s ease;
+    --tran-03: all 0.2s ease;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body{
+    background: var(--primary-color);
+}
+
+/*Profile*/
+
+#profile-fade{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 5;
+}
+
+#profile-modal{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 10;
+}
+
+.profile .title{
+    position: relative;
+    
+    font-size: 23px;
+    font-weight: 600;
+}
+
+.profile .title::before{
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 3px;
+    width: 30px;
+    background-color: var(--primary-color);
+    border-radius: 25px;
+}
+
+.profile{
+    position: relative;
+    max-width: 400px;
+    height: 700px;
+    width: 100%;
+    background: var(--panel-color);
+    border-radius: 12px;
+    padding: 30px 25px;
+}
+
+.profile .input-field{
+    position: relative;
+    height: 40px;
+    width: 100%;
+    margin-top: 30px;
+}
+
+
+.input-field input{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    padding: 0 35px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    border-bottom: 2px solid #ccc;
+    border-top: 2px solid transparent;
+    transition: all 0.2 ease;
+}
+
+.profile-button{
+    margin-top: 15px;
+}
+
+.profile-button input{
+    width: 100%;
+    color: #fff;
+    padding: 12px 0;
+    margin-top: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.profile .profile-img{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-top: 10px;
+}
+
+.profile .profile-img img{
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 8px solid var(--border-color);
+    cursor: pointer;
+}
+
+.profile .profile-img img::before{
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 125px;
+    width: 185px;
+    height: 185px;
+    border-radius: 50%;
+    border: 3px solid var(--panel-color);
+    pointer-events: none;
+    z-index: 999;
+}
+
+.profile .profile-img img::after{
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 125px;
+    width: 190px;
+    height: 190px;
+    background: var(--text-color);
+    border-radius: 50px;
+    opacity: 0;
+    pointer-events: none;
+    transition: .2s ease;
+}
+
+.profile .profile-img img:hover::after{
+    opacity: 0.5;
+}
+
+.profile .profile-img i{
+    position: absolute;
+    z-index: 999;
+    color: var(--panel-color);
+    font-size: 20px;
+    top: 30px;
+    right: 120px;
+    opacity: 0;
+    pointer-events: none;
+    transition: .2s ease;
+}
+
+.profile .profile-img:hover > i{
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.profile .profile-img input{
+    display: none;
+}
+
+.input-field i{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+    font-size: 23px;
+}
+ 
+.input-field i.icon{
+    left: 0;
+}
+
+.btn-cancel{
+    background: var(--red);
+}
+
+.btn-save{
+    background: var(--primary-color);
+}
+
+.btn-save:hover{
+    background: var(--primaryHover);
+}
+
+.btn-cancel:hover{
+    background-color: var(--redHover) ;
+}
+
+
+.profile .hidePwGen{
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    color: var(--red);
+    font-size: 30px;
+    cursor: pointer;
+ }
+ 
+ .profile .hidePwGen:hover{
+    color: var(--redHover);
+ }
