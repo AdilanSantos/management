@@ -398,7 +398,7 @@ body{
    transition: all 0.2s ease;
 }
 .wrapper .title{
-position: relative;
+   position: relative;
   font-size: 23px;
   font-weight: 600;
 }

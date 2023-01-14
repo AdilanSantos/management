@@ -9,6 +9,14 @@
     <title>Dashboard</title>
 </head>
 <body>
+    <div class="alert hide">
+        <i class="uil uil-exclamation-circle"></i>
+        <span class="alert-message" id="message"></span>
+        <div class="close-message">
+            <i class="uil uil-multiply"></i>
+        </div>
+        
+    </div>
 
     <nav>
         <div class="logo-name">
@@ -24,6 +32,10 @@
                 <li><a href="#">
                     <i class="uil uil-estate"></i>
                     <span class="link-name">Dahsboard</span>
+                </a></li>
+                <li><a href="#">
+                    <i class="uil uil-bill"></i>
+                    <span class="link-name">Venda</span>
                 </a></li>
             </ul>
             
@@ -47,18 +59,46 @@
         </div>
     </nav>
 
-    <div class="profile-box">
-        <img src="src/image/profile.png" alt="">
-        <input type="file" name="" id="file" accept="image/*">
-        <label for="file">Editar Foto</label>
-        <input type="text" name="" placeholder="Nome">
-        <input type="text" name="" placeholder="Email">
-        <input type="text" name="" placeholder="Número de Telefone">
-        <input type="text" name="" placeholder="Data de Nascimento">
+    <div id="profile-fade" class="hide">
+        <div id="profile-modal" class="profile hide">
+            <span class="title">Editar Perfil</span>
+            <i class="uil uil-multiply hideProfile"></i>
 
-        <div class="profile-buttons">
-            <button>Cancelar</button>
-            <button>Salvar</button>
+            <div class="profile-img">
+                <label for="file">
+                    <img id="upload" src="src/image/profile.png" alt="">
+                </label>
+                <input type="file" accept="image/*" name="image" id="file" >
+                <i class="uil uil-pen"></i>
+            </div>
+
+            <div class="input-field">
+                <input type="text" placeholder="Insira o Nome" id="profileName">
+                <i class="uil uil-user"></i>
+            </div>
+
+            <div class="input-field">
+                
+                <input type="text" placeholder="Insira seu Email" id="profileEmail">
+                <i class="uil uil-envelope icon"></i>
+            </div>
+
+            <div class="input-field">
+                <input type="password" placeholder="Insira sua Senha" id="profilePwd">
+                <i class="uil uil-lock icon"></i>
+            </div>
+
+            <div class="input-field">
+                <input type="password" placeholder="Confirme sua Senha" id="profileConfirmPwd">
+                <i class="uil uil-lock icon"></i>
+            </div>
+
+            
+
+            <div class="profile-button">
+                <input class="btn-save" id="profileSave" type="button" value="Salvar">
+                <input class="btn-cancel" type="button" value="Cancelar">
+            </div>
         </div>
     </div>
 
@@ -71,7 +111,9 @@
                 <input type="text" placeholder="Pesquisar...">
             </div>
 
-            <img src="src/image/profile.png" alt="">
+            <div class="profile-box">
+                <i class="uil uil-user-square openProfile"></i>
+            </div>
         </div>
 
         <div class="dash-content">
@@ -149,7 +191,7 @@
 
     </section>
     
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="src/js/dashboard.js"></script>
 </body>
 </html>

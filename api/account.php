@@ -141,7 +141,106 @@ switch ($_GET['action']) {
             break;
         }
 
-    case 'edit':
+    case 'upload':
+
+        if (isset($_FILES['profile_image'])) {
+
+            #Obtendo imagem
+            $imgName = $_FILES['profile_image']['name'];
+            $imgSize = $_FILES['profile_image']['size'];
+            $tmpName = $_FILES['profile_image']['tmp_name'];
+            $error = $_FILES['profile_image']['error'];
+
+            if ($error === 0) {
+                if ($imgSize >100000000) {
+                    $jResponse['success'] = false;
+                    $jResponse['msg'] = "Tamanho do arquivo muito grande!";
+
+                    echo json_encode($jResponse);
+                    break;
+                }else{
+
+                    #Obtendo tipo de arquivo
+                    $imgEx = pathinfo($imgName,PATHINFO_EXTENSION);
+
+                    $imgExLc = strtolower($imgEx);
+
+                    $allowedEx = array("jpeg", "jpg", "png");
+
+                    #Validando se o tipo de arquivo é permitido
+                    if (in_array($imgExLc, $allowedEx)) {
+                        
+                        #Salvando foto em uploads
+                        $newImgName = uniqid('IMG-', true).'.'.$imgExLc;
+
+                        $imgUploadPath = "../uploads/".$newImgName;
+
+                        move_uploaded_file($tmpName, $imgUploadPath);
+
+                        #Salvando foto no BD
+                        $qInsertPhoto = runQueryIUD("UPDATE account SET imageName='{$newImgName}' WHERE id='3' ");
+
+                        if ($qInsertPhoto >= 1) {
+                            $jResponse['success'] = true;
+                            $jResponse['msg'] = "Imagem alterada com sucesso!";
+                            $jResponse['src'] = $newImgName;
+                            echo json_encode($jResponse);
+                            break;
+                        }else{
+                            $jResponse['success'] = false;
+                            $jResponse['msg'] = "Houve um erro ao salvar imagem!";
+                            $jResponse['sql'] =$qInsertPhoto;
+                            echo json_encode($jResponse);
+                            break;
+                        }
+
+                    }else{
+                        $jResponse['success'] = false;
+                        $jResponse['msg'] = "Tipo de arquivo não permitido.";
+                        echo json_encode($jResponse);
+                        break;
+                    }
+
+                    $jResponse['success'] = true;
+                    $jResponse['msg'] = "Tamanho do arquivo muito grande!";
+
+                    echo json_encode($jResponse);
+                    break;
+                }
+                
+            }else{
+                #error message
+                $jResponse['success'] = false;
+                $jResponse['msg'] = "Erro ocorreu";
+
+                echo json_encode($jResponse);
+                break;
+            }
+        }
+        $jResponse['success'] = false;
+        $jResponse['msg'] = "Sem arquivo";
+        echo json_encode($jResponse);
+
+        break;
+
+    case 'list':
+        $sId = $jContent['id'];
+
+        $qListUser = runQuerySelect("SELECT * from account WHERE id='{$sId}'");
+        if ($qListUser >= 1) {
+            $jResponse['success'] = true;
+            $jResponse['name'] = $qListUser[0]['name'];
+            $jResponse['email'] = $qListUser[0]['email'];
+            $jResponse['src'] = $qListUser[0]['imageName'];
+            echo json_encode($jResponse);
+            break;
+
+        }else{
+            $jResponse['success'] = true;
+            $jResponse['msg'] = 'Não foi possível listar informação';
+            echo json_encode($jResponse);
+            break;
+        }
         break;
 
     case 'recoveryPassword':
