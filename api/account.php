@@ -16,7 +16,7 @@ switch ($_GET['action']) {
         $sSignupConfirmPwd =  escapeString(trim($jContent['confirmPassword']));
         $sSigCheck = escapeString(trim($jContent['sigCheck']));
 
-        if (!validadeEmail($sSignupEmail)) {
+        if (!validade_Email($sSignupEmail)) {
             $jResponse['success'] = false;
             $jResponse['msg'] = 'Insira um Email válido!';
             echo (json_encode($jResponse));
@@ -32,7 +32,7 @@ switch ($_GET['action']) {
             echo (json_encode($jResponse));
             break;
         } else {
-            $qConsultUser = (runQuerySelect("SELECT * FROM account WHERE email='{$sSignupEmail}'"));
+            $qConsultUser = (runQuerySelect("SELECT * FROM accounts WHERE email='{$sSignupEmail}'"));
 
             if (count($qConsultUser) >= 1) {
                 $jResponse['success'] = false;
@@ -45,7 +45,7 @@ switch ($_GET['action']) {
                 $sha1Pwd = sha1($sSignupPwd);
 
                 //Criando Usuario no BD
-                $qCreateUser = (runQueryIUD("INSERT INTO account (email, name, password, sigCheck) VALUES ('{$sSignupEmail}', '{$sSignupName}', '{$sha1Pwd}', '{$sSigCheck}')"));
+                $qCreateUser = (runQueryIUD("INSERT INTO accounts (email, name, password, sigCheck) VALUES ('{$sSignupEmail}', '{$sSignupName}', '{$sha1Pwd}', '{$sSigCheck}')"));
 
                 if ($qCreateUser >= 1) {
                     $jResponse['success'] = true;
@@ -71,13 +71,13 @@ switch ($_GET['action']) {
         if ($sType == 'google') {
             $sLoginEmail = escapeString(trim($jContent['email']));
 
-            if (!validadeEmail($sLoginEmail)) {
+            if (!validade_Email($sLoginEmail)) {
                 $jResponse['success'] = false;
                 $jResponse['msg'] = 'Insira um Email válido!';
                 echo (json_encode($jResponse));
                 break;
             } else {
-                $qConsultUser = (runQuerySelect("SELECT * FROM account WHERE email='{$sLoginEmail}'"));
+                $qConsultUser = (runQuerySelect("SELECT * FROM accounts WHERE email='{$sLoginEmail}'"));
 
                 if (count($qConsultUser) <= 0) {
                     $jResponse['success'] = false;
@@ -105,7 +105,7 @@ switch ($_GET['action']) {
             $sLoginEmail = escapeString(trim($jContent['email']));
             $sLoginPwd =  escapeString(trim($jContent['password']));
 
-            if (!validadeEmail($sLoginEmail)) {
+            if (!validade_Email($sLoginEmail)) {
                 $jResponse['success'] = false;
                 $jResponse['msg'] = 'Insira um Email válido!';
                 echo (json_encode($jResponse));
@@ -115,13 +115,28 @@ switch ($_GET['action']) {
                 //Codificando a senha em sh1
                 $sha1Pwd = sha1($sLoginPwd);
 
-                $qConsultUser = (runQuerySelect("SELECT * FROM account WHERE email='{$sLoginEmail}' AND password='{$sha1Pwd}'"));
+                $qConsultUser = (runQuerySelect("SELECT * FROM accounts WHERE email='{$sLoginEmail}' AND password='{$sha1Pwd}'"));
 
                 if (count($qConsultUser) >= 1) {
-                    $jResponse['success'] = true;
-                    $jResponse['msg'] = 'Acesso Liberado!';
-                    echo (json_encode($jResponse));
-                    break;
+
+                    $sSession = generate_Hash(14);
+
+                    $qUpdateSession = runQueryIUD("UPDATE accounts SET session='{$sSession}' WHERE email='{$sLoginEmail}'");
+                    if ($qUpdateSession >= 1) {
+                        $jResponse['success'] = true;
+                        $jResponse['msg'] = 'Acesso Liberado!';
+                        $jResponse['session'] = $sSession;
+                        echo (json_encode($jResponse));
+                        break;
+                    }else{
+                        $jResponse['success'] = false;
+                        $jResponse['msg'] = 'Erro ao iniciar Sessão!';
+                        $jResponse['sql'] = $sSession;
+                        echo (json_encode($jResponse));
+                        break;
+                    }
+
+                    
                 } else {
                     $jResponse['success'] = false;
                     $jResponse['msg'] = 'Login ou Senha incorretos!';
@@ -129,32 +144,36 @@ switch ($_GET['action']) {
                     break;
                 }
             }
-
-            $jResponse['success'] = false;
-            $jResponse['msg'] = "Usuario não encontrado";
-            echo (json_encode($jResponse));
-            break;
         } else {
             $jResponse['success'] = false;
             $jResponse['msg'] = 'Erro na solicitação!';
             echo (json_encode($jResponse));
             break;
         }
+        break;
 
-    case 'upload':
+    case 'uploadImage':
+        define('MB', 1048576);
 
-        if (isset($_FILES['profile_image'])) {
+        if (isset($_FILES['profile_image'] ) && isset($_POST['imgCurrent'])) {
 
-            #Obtendo imagem
+            #Obtendo nova imagem 
             $imgName = $_FILES['profile_image']['name'];
             $imgSize = $_FILES['profile_image']['size'];
             $tmpName = $_FILES['profile_image']['tmp_name'];
             $error = $_FILES['profile_image']['error'];
 
+            #obtendo imagem atual
+            $imgCurrent = $_POST['imgCurrent'];
+
+            $sSession = $_POST['session'];
+
+            
             if ($error === 0) {
-                if ($imgSize >100000000) {
+                if ($imgSize > 5*MB) {
                     $jResponse['success'] = false;
                     $jResponse['msg'] = "Tamanho do arquivo muito grande!";
+                    $jResponse['size'] = $imgSize;
 
                     echo json_encode($jResponse);
                     break;
@@ -175,15 +194,23 @@ switch ($_GET['action']) {
 
                         $imgUploadPath = "../uploads/".$newImgName;
 
+                        #Deletando imagem atual
+                        if($imgCurrent != 'src/image/profile.png'){
+                            unlink('../'.$imgCurrent);
+                        }
+                        
+
+                        #Criando arquivo
                         move_uploaded_file($tmpName, $imgUploadPath);
 
                         #Salvando foto no BD
-                        $qInsertPhoto = runQueryIUD("UPDATE account SET imageName='{$newImgName}' WHERE id='3' ");
+                        $qInsertPhoto = runQueryIUD("UPDATE accounts SET imageName='{$newImgName}' WHERE session='{$sSession}' ");
 
                         if ($qInsertPhoto >= 1) {
                             $jResponse['success'] = true;
                             $jResponse['msg'] = "Imagem alterada com sucesso!";
                             $jResponse['src'] = $newImgName;
+                            $jResponse['imgCurrent'] = $imgCurrent;
                             echo json_encode($jResponse);
                             break;
                         }else{
@@ -211,7 +238,7 @@ switch ($_GET['action']) {
             }else{
                 #error message
                 $jResponse['success'] = false;
-                $jResponse['msg'] = "Erro ocorreu";
+                $jResponse['msg'] = "Não foi possível alterar Imagem!";
 
                 echo json_encode($jResponse);
                 break;
@@ -223,11 +250,11 @@ switch ($_GET['action']) {
 
         break;
 
-    case 'list':
-        $sId = $jContent['id'];
-
-        $qListUser = runQuerySelect("SELECT * from account WHERE id='{$sId}'");
-        if ($qListUser >= 1) {
+    case 'listProfile':
+        $sSession = $jContent['session'];
+        
+        $qListUser = runQuerySelect("SELECT * from accounts WHERE session='{$sSession}'");
+        if (count($qListUser) >= 1) {
             $jResponse['success'] = true;
             $jResponse['name'] = $qListUser[0]['name'];
             $jResponse['email'] = $qListUser[0]['email'];
@@ -236,10 +263,54 @@ switch ($_GET['action']) {
             break;
 
         }else{
-            $jResponse['success'] = true;
-            $jResponse['msg'] = 'Não foi possível listar informação';
+            $jResponse['success'] = false;
+            $jResponse['msg'] = 'Sessão expirada ou não existe!';
             echo json_encode($jResponse);
             break;
+        }
+        break;
+    case 'editProfile':
+        $sProfileName =  escapeString(trim($jContent['name']));
+        $sProfileEmail = escapeString(trim($jContent['email']));
+        $sProfilePwd =  escapeString(trim($jContent['password']));
+        $sProfileConfirmPwd =  escapeString(trim($jContent['confirmPassword']));
+
+        if ($sProfileName == '') {
+            $jResponse['success'] = false;
+            $jResponse['msg'] = 'Preencha o campo Nome!';
+            echo (json_encode($jResponse));
+            break;
+        }else if ($sProfilePwd > 0 and $sProfileConfirmPwd < 6) {
+            $jResponse['success'] = false;
+            $jResponse['msg'] = 'A senha deve conter no mínimo 6 caracteres!';
+            echo (json_encode($jResponse));
+            break;
+        }else if ($sProfilePwd != $sProfileConfirmPwd) {
+            $jResponse['success'] = false;
+            $jResponse['msg'] = 'As senhas não coincidem!';
+            echo (json_encode($jResponse));
+            break;
+        }else {
+            if ($sProfilePwd == '' and $sProfileConfirmPwd == '') {
+                $qEditProfile = runQueryIUD("UPDATE accounts SET name='{$sProfileName}' WHERE email='{$sProfileEmail}' ");
+            }else{
+                $sha1Pwd = sha1($sProfilePwd);
+                $qEditProfile = runQueryIUD("UPDATE accounts SET name='{$sProfileName}' password='{$sha1Pwd}' WHERE email='{$sProfileEmail}' ");
+            }
+
+            if ($qEditProfile >= 1) {
+                $jResponse['success'] = true;
+                $jResponse['msg'] = 'Perfil Atualizado!';
+                $jResponse['name'] = $sProfileName;
+                echo (json_encode($jResponse));
+                break;
+            } else {
+                $jResponse['success'] = false;
+                $jResponse['msg'] = 'Não foi possível editar sua conta!';
+                $jResponse['query'] = $qEditProfile;
+                echo (json_encode($jResponse));
+                break;
+            }
         }
         break;
 
@@ -247,13 +318,13 @@ switch ($_GET['action']) {
 
         $sRecoveryEmail = escapeString(trim($jContent['email']));
 
-        if (!validadeEmail($sRecoveryEmail)) {
+        if (!validade_Email($sRecoveryEmail)) {
             $jResponse['success'] = false;
             $jResponse['msg'] = 'Insira um Email válido!';
             echo (json_encode($jResponse));
             break;
         } else {
-            $qConsultUser = (runQuerySelect("SELECT * FROM account WHERE email='{$sRecoveryEmail}'"));
+            $qConsultUser = (runQuerySelect("SELECT * FROM accounts WHERE email='{$sRecoveryEmail}'"));
 
             if (count($qConsultUser) <= 0) {
                 $jResponse['success'] = false;
@@ -262,9 +333,9 @@ switch ($_GET['action']) {
                 break;
             } else {
                 #Gerando Hash para token
-                $sha1Token = gerarHash(14);
+                $sha1Token = generate_Hash(14);
                 #Atualizando Usuario
-                $qUpdateUser = (runQueryIUD("UPDATE account  SET token= '{$sha1Token}' WHERE email='{$sRecoveryEmail}' "));
+                $qUpdateUser = (runQueryIUD("UPDATE accounts  SET token= '{$sha1Token}' WHERE email='{$sRecoveryEmail}' "));
 
                 #Enviando Email
                 $jSendEmail = sendEmail($qConsultUser[0]['email'], $qConsultUser[0]['name'], $sha1Token);
@@ -307,9 +378,9 @@ switch ($_GET['action']) {
             $sha1Pwd = sha1($sChangePwd);
             
             #Gerando novo Token para utilizar
-            $newToken = gerarHash(14);
+            $newToken = generate_Hash(14);
 
-            $qUpdatePassword = (runQueryIUD("UPDATE account  SET password= '{$sha1Pwd}', token='{$newToken}'  WHERE token='{$sChangeToken}' "));
+            $qUpdatePassword = (runQueryIUD("UPDATE accounts  SET password= '{$sha1Pwd}', token='{$newToken}'  WHERE token='{$sChangeToken}' "));
             
             if ($qUpdatePassword >= 1) {
                 $jResponse['success'] = true;
@@ -329,7 +400,7 @@ switch ($_GET['action']) {
     case 'validateToken':
         $sToken = escapeString(trim($jContent['token']));
 
-        $qConsultToken = (runQuerySelect("SELECT * FROM account WHERE token='{$sToken}'"));
+        $qConsultToken = (runQuerySelect("SELECT * FROM accounts WHERE token='{$sToken}'"));
 
         if (count($qConsultToken) <= 0) {
             $jResponse['success'] = false;
@@ -348,7 +419,28 @@ switch ($_GET['action']) {
     case 'validateEmail':
         
         break;
+
     
+    case 'logout':
+        $sOldSession =  $jContent['session'];
+        $sNewSession = $sSession = generate_Hash(14);
+
+        $qUpdateSession = runQueryIUD("UPDATE accounts SET session='{$sNewSession}' WHERE session='{$sOldSession}'");
+        if ($qUpdateSession >= 1) {
+                $jResponse['success'] = true;
+                $jResponse['msg'] = 'Logout Realizado!';
+                echo (json_encode($jResponse));
+                break;
+        }else{
+            $jResponse['success'] = false;
+            $jResponse['msg'] = 'Erro ao atualizar Sessão!';
+            $jResponse['sql'] = $sSession;
+            echo (json_encode($jResponse));
+            break;
+        }
+
+        break;
+
     default:
         echo ('{"msg":"Not Found"}');
         break;

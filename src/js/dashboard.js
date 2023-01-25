@@ -1,81 +1,40 @@
-//Constante para exibir perfil
-const openProfile = document.querySelector('.openProfile')
-const closeModal = document.querySelector('.hideProfile');
-const modal = document.querySelector('#profile-modal');
-const fade = document.querySelector('#profile-fade');
 
-const toggleModal = ()=>{
-    [modal, fade].forEach((el)=> el.classList.toggle('hide'));
-}
+//Toggle e Sidebar
+const body = document.querySelector("body");
+const sidebar = body.querySelector(".sidebar");
+const toggle = body.querySelector(".toggle");
+const searchBtn = body.querySelector(".search-box");
+const modeSwitch = body.querySelector(".toggle-switch");
+const modeText = body.querySelector(".mode-text");
 
-[openProfile, closeModal, modal, fade].forEach((el)=>{
-    el.addEventListener('click',()=> toggleModal());
+toggle.addEventListener("click", ()=>{
+    sidebar.classList.toggle("close");
 });
-
-//Editar Imagem e exibir 
-const inputFile = document.querySelector('#file');
-const uploadImage = document.querySelector('#upload')
-
-inputFile.addEventListener('change', function(e){
-    const inputTarget = e.target;
-    const fImage = inputTarget.files[0];
-    
-    console.log(imagePrevious)
-    
-
-    if (fImage){
-        const reader = new FileReader();
-        reader.addEventListener('load', function(e){
-            const readerTarget = e.target;
-            $('#upload').attr("src", readerTarget.result);
-
-            //Obtendo valores alterados
-            var form_data = new FormData();
-            var imgProfile = $("#file")[0].files;
-
-            if (imgProfile.length > 0){
-                form_data.append('profile_image', imgProfile[0]);
-                console.log(form_data)
-            }else{
-                form_data.append('profile_image', '');
-            }
-
-            jData = '{"image":'+form_data+'}'
-            //Requisição Ajax encaminhando os dados de Login
-            $.ajax({
-                
-                url: "api/account.php?action=upload",
-                contentType: false,
-                processData: false,
-                type: "POST",
-                data: form_data
-            }).done(function(response){
-                if (response.success == true) {
-                    console.log(response.msg)
-                    
-                }else{
-                    console.log(response.msg)
-                }
-            }).fail(function(jqXHR, StatusCode){
-                console.log(jqXHR)
-            })
-        });
-
-        reader.readAsDataURL(fImage)
-    }
+searchBtn.addEventListener("click", ()=>{
+    sidebar.classList.remove("close");
 })
 
+//Alternar para Dark Mode
+modeSwitch.addEventListener("click", ()=>{
+    body.classList.toggle("dark");
 
-const body = document.querySelector("body");
-    modeToggle = body.querySelector(".mode-toggle");
-    sidebar = body.querySelector("nav");
-    sidebarToggle = body.querySelector(".sidebar-toggle");
+    if (body.classList.contains("dark")) {
+        localStorage.setItem("mode", "dark");
+    }else{
+        localStorage.setItem("mode","light");
+    }
+
+    if (body.classList.contains("dark")) {
+        modeText.innerText ="Light Mode"
+    }else{
+        modeText.innerText ="Dark Mode"
+    }
+})
 
 let getMode = localStorage.getItem("mode");
 if (getMode && getMode === "dark") {
     body.classList.toggle("dark")
 }
-
 
 let getStatus = localStorage.getItem("status");
 if (getStatus && getStatus === "close") {
@@ -83,110 +42,80 @@ if (getStatus && getStatus === "close") {
 }
 
 
-modeToggle.addEventListener("click", ()=>{
-    body.classList.toggle("dark")
-    if (body.classList.contains("dark")) {
-        localStorage.setItem("mode", "dark");
-    }else{
-        localStorage.setItem("mode","light");
-    }
-});
+//Validação de Session e Exibir Dashboard
+if (!localStorage.getItem("session")) {
+    window.location.href = "index";
+}else{
+    var sSession = localStorage.getItem("session");
+    var jData = '{"session":"'+sSession+'"}'
 
-sidebarToggle.addEventListener("click", ()=>{
-    sidebar.classList.toggle("close");
-    if (sidebar.classList.contains("close")) {
-        localStorage.setItem("status", "close");
-    }else{
-        localStorage.setItem("status","open");
-    }
-})
-
-//Listar Perfil
-
-$('.openProfile').click(function(){
-    var sId = '3';
-
-    jData = '{"id":"'+sId+'"}'
-    //Requisição Ajax para lista configuração
     $.ajax({
-        url: "api/account.php?action=list",
+        url: "api/dashboard.php?action=listDashboard",
         contentType: "application/json; charset=utf-8",
         type: "POST",
         data: jData
     }).done(function(response){
-        if (response.success == true) {
-            $('#upload').attr("src", "uploads/"+response.src+"");
-            $('#profileName').val(response.name)
-            $('#profileEmail').val(response.email)
-            $('#profilePwd').val('')
-            $('#profileConfirmPwd').val('')
-            console.log(response)
+        if (response.success == false){
+            window.location.href = 'index';
         }else{
-            console.log('Houve um erro ao carregar Perfil.')
+            console.log(response)
+            //Inserindo informações na Dashboard
+            $('#totalSales').html(response.numberTotalSalesMonth);
+            $('#productBestSellers').html(response.productBestSellingMonth);
+            $('#totalValue').html(response.priceTotalSalesMonth);
+
+            aSales = response.sales;
+            sNames = '<span class="data-title">Produto</span>'
+            sValues = '<span class="data-title">Valor</span>';
+            sAmount = '<span class="data-title">Quantidade</span>';
+            sDates = '<span class="data-title">Data</span>';
+
+            for (let index = 0; index < aSales.length; index++) {
+                
+                sNames += `
+                    <span class="data-list">`+ aSales[index].product_name +`</span>
+                    `
+                sValues += `
+                    <span class="data-list">R$ `+ aSales[index].price +`</span>
+                    `
+                sAmount += `
+                    <span class="data-list">`+ aSales[index].quantity +`</span>
+                    `
+                sDates += `
+                    <span class="data-list">`+ aSales[index].dataCriacao +`</span>
+                    `
+                
+            }
+
+            $('.data.names').html(sNames);
+            $('.data.sales').html(sValues);
+            $('.data.sales-amount').html(sAmount);
+            $('.data.sales-data').html(sDates);
+            
         }
     }).fail(function(jqXHR, StatusCode){
-        console.log(jqXHR)
-    })
-})
-
-//Editar Perfil
-$('#profileSave').click(function(){
-    var sProfileName = $('#profileName').val().trim();
-    var sProfileEmail = $('#profileEmail').val().trim();
-    var sProfilePwd = $('#profilePwd').val().trim();
-    var sProfileConfirmPwd = $('#profileConfirmPwd').val().trim();
-
-    if(sProfileName == ''){
-        console.log('Preencha o Nome.')
-    } 
-    else if(sProfileEmail == ''){
-        console.log('Preencha o Email');
-    }else if(sProfilePwd.length > 0 & sProfilePwd.length < 6)
-        console.log('Insira mais que 6 caracteres')
-    else if(sProfilePwd!= sProfileConfirmPwd){
-        console.log('As senhas não coincidem')
-    }else{
-        console.log('deu certo')
-    }
         
-    
-    
-    /**
-    //Requisição Ajax para lista configuração
-    $.ajax({
-        url: "api/account.php?action=list",
-        contentType: "application/json; charset=utf-8",
-        type: "POST",
-        data: jData
-    }).done(function(response){
-        if (response.success == true) {
-            $('#upload').attr("src", "uploads/"+response.src+"");
-            $('#profileName').val(response.name)
-            $('#profileEmail').val(response.email)
-            console.log(response)
-        }else{
-            console.log('Houve um erro ao carregar Perfil.')
-        }
-    }).fail(function(jqXHR, StatusCode){
-        console.log(jqXHR)
-    })*/
-})
-
-/* Função para abrir mensagem de erro */
-function openMessageError(){
-    $(".alert").removeClass('hide');//removendo classe para exibir alerta
-    $(".alert").addClass('show');
-    $(".alert").addClass('showAlert');
-
-    //Função para fechar mensagem após 5 segundos
-    setTimeout(function(){
-        $(".alert").addClass("hide");
-        $(".alert").removeClass("show");
-    }, 5000);
+    })
 }
 
-/* Função para fechar mensagem de erro */
-$(".close-message").click(function(){
-    $(".alert").addClass("hide");
-    $(".alert").removeClass("show");
+//Logout
+$('#logout').click(function(){
+    jData = '{"session":"'+sSession+'"}'
+
+    $.ajax({
+        url: "api/account.php?action=logout",
+        contentType: "application/json; charset=utf-8",
+        type: "POST",
+        data: jData
+    }).done(function(response){
+        if (response.success == true) {
+            window.location.href ='index';
+            
+        }else{
+            $("#message").html(response.msg)//Message Error
+            openMessageError();
+        }
+    }).fail(function(jqXHR){
+        console.log(jqXHR)
+    })
 })

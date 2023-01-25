@@ -120,11 +120,11 @@ $('#login').click(function(){
             data: jData
         }).done(function(response){
             if (response.success == true) {
-                console.log('Mensagem com Sucesso')
+                localStorage.setItem("session", response.session)
                 //Direcionando para pagina Logado
-                window.location.href = 'logged.html';
+                window.location.href = 'Dashboard';
             }else{
-                
+                console.log(response)
                 $("#message").html(response.msg);//Message Error
                 openMessageError();
             }
@@ -181,7 +181,7 @@ $('#create-account').click(function(){
             console.log(response)
             if (response.success == true) {
                 
-                window.location.href = 'logged.html';
+                window.location.href = 'Dashboard';
 
             }else{
                 
@@ -237,7 +237,7 @@ function handleCredentialResponse(response) {
         if (response.success == true) {
             console.log('Mensagem com Sucesso')
             //Direcionando para pagina Logado
-            window.location.href = 'logged.html';
+            window.location.href = 'Dashboard';
         }else{
             $("#message").html(response.msg);//Message Error
             openMessageError();
@@ -249,45 +249,3 @@ function handleCredentialResponse(response) {
 }
 
 
-//Função para Login Google
-window.onload = function () {
-  google.accounts.id.initialize({
-    client_id: "883974841374-kaacq926614f0l4h5pgit23ovjdu30u6.apps.googleusercontent.com",
-    callback: handleCredentialResponse
-  });
-  google.accounts.id.renderButton(
-    document.getElementById("login-Google"),
-    { theme: "outline", size: "large", width:"330" }  // customization attributes
-  );
-  google.accounts.id.prompt(); // also display the One Tap dialog
-}
-
-//Função para decodificar JWT retorno do Google
-function parseJwt (token) {
-    var base64Url = token.split('.')[1];
-    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
-
-    return JSON.parse(jsonPayload);
-}
-
-/*Login Facebook */
-
-window.fbAsyncInit = function() {
-    FB.init({
-      appId      : '573449594154606',
-      xfbml      : true,
-      version    : 'v15.0'
-    });
-    FB.AppEvents.logPageView();
-  };
-
-  (function(d, s, id){
-     var js, fjs = d.getElementsByTagName(s)[0];
-     if (d.getElementById(id)) {return;}
-     js = d.createElement(s); js.id = id;
-     js.src = "https://connect.facebook.net/en_US/sdk.js";
-     fjs.parentNode.insertBefore(js, fjs);
-   }(document, 'script', 'facebook-jssdk'));
