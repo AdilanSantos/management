@@ -227,11 +227,11 @@ body{
   
  }
  
- @keyframes is-rotating{
+@keyframes is-rotating{
    to{
      transform: rotate(1turn);
    }
- }
+}
 
 .loginBtn{
    margin-top: 5px;

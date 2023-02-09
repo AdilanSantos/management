@@ -26,11 +26,13 @@ function verify_Session($sSession){
   if(count($qConsultSession) >= 1){
       $jResponse['success'] = true;
       $jResponse['msg'] = 'Sessão Ativa!';
+      $jResponse['session'] = 'active';
       
       return json_encode($jResponse);
   }else{
       $jResponse['success'] = false;
       $jResponse['msg'] = 'Sessão expirada ou não existe!';
+      $jResponse['session'] = 'inactive';
       return json_encode($jResponse);
   }
 }

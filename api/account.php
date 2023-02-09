@@ -37,7 +37,6 @@ switch ($_GET['action']) {
             if (count($qConsultUser) >= 1) {
                 $jResponse['success'] = false;
                 $jResponse['msg'] = 'O Email informado já está registrado!';
-                $jResponse['log'] = $qConsultUser;
                 echo (json_encode($jResponse));
                 break;
             } else {

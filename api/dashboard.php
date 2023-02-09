@@ -9,7 +9,7 @@ $jContent = json_decode(file_get_contents('php://input'), true);
 
 switch ($_GET['action']) {
     
-    case 'listDashboard':
+    case 'list':
 
         $sSession = $jContent['session'];
 
@@ -19,7 +19,7 @@ switch ($_GET['action']) {
             echo json_encode($jVerifySession);
         }else{
             
-            $qSelectDashboard = runQuerySelect("SELECT *, DATE_FORMAT(date,'%d/%m/%Y') AS dataCriacao FROM products WHERE user_id=(SELECT user_id FROM accounts WHERE session='{$sSession}')");
+            $qSelectDashboard = runQuerySelect("SELECT *, DATE_FORMAT(date,'%d/%m/%Y') AS dataCriacao FROM sales WHERE account_id=(SELECT account_id FROM accounts WHERE session='{$sSession}')");
 
             $fPriceTotalSalesMonth = 0;
             $aProducts = [];
