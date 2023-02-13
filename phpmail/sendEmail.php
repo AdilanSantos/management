@@ -18,7 +18,7 @@ function sendEmail($sEmail, $sName, $sMensagem, $sTitulo){
         $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
         $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
         $mail->Username   = 'notifymanagementapp@gmail.com';                     //SMTP username
-        $mail->Password   = '';                               //SMTP password
+        $mail->Password   = 'aeyadovscldmpzin';                               //SMTP password
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
         $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
@@ -38,6 +38,7 @@ function sendEmail($sEmail, $sName, $sMensagem, $sTitulo){
         return $jSendEmail;
     } catch (Exception $e) {
         $jSendEmail['success'] = false;
+        $jSendEmail['msg'] = ;
         return $jSendEmail;
         #return "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
     }
