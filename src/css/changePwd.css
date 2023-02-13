@@ -375,28 +375,6 @@ body{
     }
  }
  
- .alert.hide{
-    animation: hide_slide 1s ease forwards;
- }
- 
- @keyframes hide_slide{
-    0%{
-       transform: translateX(-10px);
-    }
- 
-    40%{
-       transform: translateX(0%);
-    }
-    
-    80%{
-       transform: translateX(-10%);
-    }
- 
-    100%{
-       transform: translateX(100%);
-    }
- }
- 
  
  .alert .uil-exclamation-circle{
     position: absolute;

@@ -5,6 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="src/css/dashboard.css">
+    <link rel="shortcut icon" href="src/image/dashboard.svg" type="image/x-icon">
+    
     <!-- Unicons -->
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
     <title>Dashboard</title>
@@ -19,7 +21,7 @@
                 </span>
 
                 <div class="text logo-text">
-                    <span class="name">Na sua Rua</span>
+                    <span class="name">Gerenciador</span>
                     <span class="user-name"></span>
                 </div>
             </div>
@@ -108,7 +110,7 @@
                 </a>
             </li>
             <li>
-                <a href="">
+                <a href="Sales">
                     <i class="uil uil-coins icon"></i>
                     <span class="text nav-text">Vendas</span> 
                 </a>
@@ -171,19 +173,19 @@
                     <div class="box box1">
                         <i class="uil uil-analytics"></i>
                         <span class="text">Total de Vendas</span>
-                        <span class="number" id="totalSales"></span>
+                        <span class="number" id="totalSales">0</span>
                     </div>
 
                     <div class="box box2">
                         <i class="uil uil-box"></i>
                         <span class="text">Produto</span>
-                        <span class="number" id="productBestSellers"></span>
+                        <span class="number" id="productBestSellers">-</span>
                     </div>
 
                     <div class="box box3">
                         <i class="uil uil-usd-circle"></i>
                         <span class="text">Valor de Vendas</span>
-                        <span class="number" id="totalValue"></span>
+                        <span class="number" id="totalValue">0</span>
                     </div>
                 </div>
             </div>
@@ -195,6 +197,8 @@
                 </div>
 
                 <div class="activity-data">
+                    <div class="data clients">
+                    </div>
                     <div class="data names">
                     </div>
                     <div class="data sales">

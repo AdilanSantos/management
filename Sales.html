@@ -6,6 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="src/css/sales.css">
+    <link rel="shortcut icon" href="src/image/sales.svg" type="image/x-icon">
+    
     <!-- Unicons -->
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
@@ -22,7 +24,7 @@
                 </span>
 
                 <div class="text logo-text">
-                    <span class="name">Na sua Rua</span>
+                    <span class="name">Gerenciador</span>
                     <span class="user-name"></span>
                 </div>
             </div>
@@ -111,7 +113,7 @@
                 </a>
             </li>
             <li>
-                <a href="">
+                <a href="Sales">
                     <i class="uil uil-bill icon"></i>
                     <span class="text nav-text">Vendas</span> 
                 </a>
@@ -227,7 +229,7 @@
 
                     <div class="total-Sales">
                         <button disabled>
-                            <span class="total">15/15</span>
+                            <span class="total"></span>
                         </button>
                     </div>
                     <div class="search-box">
@@ -236,16 +238,33 @@
                         </button>
                         <input type="text" class="input-SearchBox" placeholder="Pesquisar...">
                     </div>
+                    <ul class="listOptions">
+                        <li>
+                            <i class="uil uil-angle-down optionIcon"></i>
+                            <ul class="optionsDropdown">
+                                <li>
+                                    <input type="radio" name="Status" value='S' checked>
+                                    <span>Ativos</span>
+                                </li>
+                                <li>
+                                    <input type="radio" name="Status" value='N' id="">
+                                    <span>Inativos</span>
+                                </li>
+                            </ul>
+                        </li>
+                        
+                    </ul>
                 </div>
+                
                 <table>
                     <thead>
                         <th><input type="checkbox" class="AllCheckBox"></th>
-                        <th><span class="data-title">Cliente</span></th>
-                        <th><span class="data-title">Data Criação</span></th>
-                        <th><span class="data-title">Data de Venda</span></th>
-                        <th><span class="data-title">Produto</span></th>
-                        <th><span class="data-title">Quantidade</span></th>
-                        <th><span class="data-title">Valor</span></th>
+                        <th><span class="data-title">Cliente</span><i></i></th>
+                        <th><span class="data-title">Data Criação</span><i></i></th>
+                        <th><span class="data-title">Data de Venda</span><i></i></th>
+                        <th><span class="data-title">Produto</span><i></i></th>
+                        <th><span class="data-title">Qtnd</span><i></i></th>
+                        <th><span class="data-title">Valor</span><i></i></th>
                     </thead>
 
                     <tbody>
@@ -264,7 +283,7 @@
 
             <div class="buttonsSales">
                 <button class="disableSale">
-                    <i class="uil uil-trash-alt"></i>
+                    <i class="uil uil-multiply"></i>
                 </button>
                 <button class="newSale">
                     <span>+</span>

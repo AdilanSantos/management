@@ -60,9 +60,7 @@ switch ($_GET['action']) {
 
 
                 if($sSaleId == ''){
-                    $qCreateSale = runQueryIUD("INSERT INTO sales (sale_clientName, sale_date, sale_datecreation, sale_product_id, sale_quantity, sale_price, user_id) VALUES ('{$sSaleClientName}', '{$sSaleDate}', '{$sDateCreation}', '{$sSaleProductId}', '{$sSaleQuantity}', '{$sSalePrice}', (SELECT account_id FROM accounts WHERE session='{$sSession}')) ");
-                }else{
-                    $qCreateSale = runQueryIUD("UPDATE sales SET sale_id='{$sSaleId}', sales_clientName='{$sSaleClientName}', sale_date='{$sSaleDate}', sale_product_id='{$sSaleProductId}', sale_quantity='{$sSaleQuantity}', sale_price=, user_id WHERE sales_id='{$sSaleId}'");
+                    $qCreateSale = runQueryIUD("INSERT INTO sales (sale_clientName, sale_date, sale_datecreation, sale_product_id, sale_quantity, sale_price, sale_active, user_id) VALUES ('{$sSaleClientName}', '{$sSaleDate}', '{$sDateCreation}', '{$sSaleProductId}', '{$sSaleQuantity}', '{$sSalePrice}', 'S' ,(SELECT account_id FROM accounts WHERE session='{$sSession}')) ");
                 }
                 if ($qCreateSale >= 1) {
                     $jResponse['success'] = true;
@@ -84,99 +82,97 @@ switch ($_GET['action']) {
         
         break;
     
-        case 'list':
-            $sSession = $jContent['session'];
-            $sPesquisa = escapeString(trim($jContent['Pesquisa']));
-            $aOrder = $jContent['Order'];
+    case 'list':
+        $sSession = $jContent['session'];
+        $sPesquisa = escapeString(trim($jContent['Pesquisa']));
+        $aOrder = $jContent['Order'];
+        $sActive = $jContent['Active'];
+        
 
-            $orderByName = '';
-            $orderByPrice = '';
+        $jVerifySession = json_decode(verify_Session($sSession),true);
 
-            $jVerifySession = json_decode(verify_Session($sSession),true);
+        if ($jVerifySession['success'] == false) {
+            echo json_encode($jVerifySession);
+            break;
+        }else{
 
-            if ($jVerifySession['success'] == false) {
-                echo json_encode($jVerifySession);
+            if (array_key_exists('RAtual', $jContent)) {
+                $iRegistroAtual = $jContent['RAtual'];
+            } else{
+                $iRegistroAtual = 0;
+            }
+
+            $sqlOrder = orderSales($aOrder);
+                    
+            if($sPesquisa == ''){
+                $qSelectSales = runQuerySelect("SELECT sales.* , products.product_name FROM sales INNER JOIN products ON sales.sale_product_id = products.product_id WHERE sale_active='{$sActive}' {$sqlOrder}");
+            }else{
+                $qSelectSales = runQuerySelect("SELECT sales.* , products.product_name FROM sales INNER JOIN products ON sales.sale_product_id = products.product_id WHERE sale_clientName LIKE '%{$sPesquisa}%' AND sale_active='{$sActive}' {$sqlOrder}");
+            }
+
+            if (count($qSelectSales) < 0) {
+                $jResponse['success'] = false;
+                $jResponse['session'] = 'active';
+                echo (json_encode($jResponse));
                 break;
             }else{
 
-                if (array_key_exists('RAtual', $jContent)) {
-                    $iRegistroAtual = $jContent['RAtual'];
-                } else{
+                $aListSales = [];
+                
+                if (array_key_exists('Tudo', $jContent)) {
+                    $iLimite = $iRegistroAtual;
                     $iRegistroAtual = 0;
-                }
-
-                foreach ($aOrder as $jOrderBy) {
-                    if (array_key_exists("ProductName",$jOrderBy)) {
-                        if ($jOrderBy['ProductName'] == "true") {
-                            $orderByName = 'ASC';
-                        } else {
-                            $orderByName = 'DESC';
-                        }  
-                    }
-                    if (array_key_exists("ProductPrice",$jOrderBy)) {
-                        if ($jOrderBy['ProductPrice'] == "true") {
-                            $orderByPrice = 'ASC';
-                        } else {
-                            $orderByPrice = 'DESC';
-                        }  
-                    }
-                }
-
-                if ($orderByName != '' and $orderByPrice != '') {
-                    $sqlOrder = 'ORDER BY product_name '.$orderByName.', product_price '.$orderByPrice.'';
-                } else if ($orderByName != ''){
-                    $sqlOrder = 'ORDER BY product_name '.$orderByName.'';
-                }else if($orderByPrice != ''){
-                    $sqlOrder = 'ORDER BY product_price '.$orderByPrice.'';
                 }else{
-                    $sqlOrder = 'ORDER BY sale_id DESC';
-                }
-                        
-                if($sPesquisa == ''){
-                    $qSelectSales = runQuerySelect("SELECT sales.* , products.product_name FROM sales INNER JOIN products ON sales.sale_product_id = products.product_id {$sqlOrder}");
-                }else{
-                    $qSelectSales = runQuerySelect("SELECT sales.* , products.product_name FROM sales INNER JOIN products ON sales.sale_product_id = products.product_id WHERE sale_clientName LIKE '%{$sPesquisa}%' {$sqlOrder}");
+                    $iLimite = $iRegistroAtual + 15;
                 }
 
-                if (count($qSelectSales) < 0) {
-                    $jResponse['success'] = false;
-                    $jResponse['session'] = 'active';
-                    echo (json_encode($jResponse));
-                    break;
-                }else{
-
-                    $aListSales = [];
-                    
-                    if (array_key_exists('Tudo', $jContent)) {
-                        $iLimite = $iRegistroAtual;
-                        $iRegistroAtual = 0;
+                for ($iRegistroAtual; $iRegistroAtual < $iLimite ; $iRegistroAtual++) {
+                    if(array_key_exists($iRegistroAtual, $qSelectSales)){
+                        array_push($aListSales , $qSelectSales[$iRegistroAtual]);
+                        $aListSales[$iRegistroAtual]['sale_date'] = date('d/m/Y', strtotime($aListSales[$iRegistroAtual]['sale_date']));
+                        $aListSales[$iRegistroAtual]['sale_datecreation'] = date('d/m/Y', strtotime($aListSales[$iRegistroAtual]['sale_datecreation']));
                     }else{
-                        $iLimite = $iRegistroAtual + 15;
+                        //Parar o Laço For
+                        break;
                     }
-
-                    for ($iRegistroAtual; $iRegistroAtual < $iLimite ; $iRegistroAtual++) {
-                        if(array_key_exists($iRegistroAtual, $qSelectSales)){
-                            array_push($aListSales , $qSelectSales[$iRegistroAtual]);
-                            $aListSales[$iRegistroAtual]['sale_date'] = date('d/m/Y', strtotime($aListSales[$iRegistroAtual]['sale_date']));
-                            $aListSales[$iRegistroAtual]['sale_datecreation'] = date('d/m/Y', strtotime($aListSales[$iRegistroAtual]['sale_datecreation']));
-                        }else{
-                            //Parar o Laço For
-                            break;
-                        }
-                    }
-
-                    $iTotalSales = count($qSelectSales);
-
-                    $jResponse['success'] = true;
-                    $jResponse['session'] = 'active';
-                    $jResponse['sales'] = $aListSales;
-                    $jResponse['total'] = $iTotalSales;
-                    echo (json_encode($jResponse));
-                    break;
                 }
+
+                $iTotalSales = count($qSelectSales);
+
+                $jResponse['success'] = true;
+                $jResponse['session'] = 'active';
+                $jResponse['sales'] = $aListSales;
+                $jResponse['total'] = $iTotalSales;
+                echo (json_encode($jResponse));
+                break;
             }
+        }
+        break;
+
+    case 'disable':
+        $sSession = $jContent['session'];
+        $aSalesID = $jContent['chave'];
+        $sDisable = $jContent['disable'];
+
+        $jVerifySession = json_decode(verify_Session($sSession),true);
+
+        if ($jVerifySession['success'] == false) {
+            echo json_encode($jVerifySession);
             break;
-    
+        }else{
+            foreach ($aSalesID as $id) {
+                $qDisableProduct = runQueryIUD("UPDATE sales SET sale_active='{$sDisable}' WHERE sale_id='{$id}'");
+
+            }
+
+            $jResponse['success'] = true;
+            $jResponse['session'] = 'active';
+            $jResponse['msg'] = 'Venda(s) Desativada(s) com Sucesso!';
+            echo (json_encode($jResponse));
+            break;
+        }
+        break;
+
         default:
         echo 'Invalido';
         break;

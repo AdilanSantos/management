@@ -36,3 +36,100 @@ function verify_Session($sSession){
       return json_encode($jResponse);
   }
 }
+
+function orderSales($aOrder){
+  $orderByClient = '';
+  $orderByDate = '';
+  $orderByDateCreation = '';
+  $orderByProduct = '';
+  $orderByQuantity = '';
+  $orderByPrice = '';
+
+  foreach ($aOrder as $jOrderBy) {
+    if (array_key_exists("SaleClient",$jOrderBy)) {
+        if ($jOrderBy['SaleClient'] == "true") {
+            $orderByClient = 'ASC';
+        } else {
+            $orderByClient = 'DESC';
+        }  
+    }
+    if (array_key_exists("SaleDateCreation",$jOrderBy)) {
+        if ($jOrderBy['SaleDateCreation'] == "true") {
+            $orderByDateCreation = 'ASC';
+        } else {
+            $orderByDateCreation = 'DESC';
+        }  
+    }
+    if (array_key_exists("SaleDate",$jOrderBy)) {
+        if ($jOrderBy['SaleDate'] == "true") {
+            $orderByDate = 'ASC';
+        } else {
+            $orderByDate = 'DESC';
+        }  
+    }
+    if (array_key_exists("SaleProduct",$jOrderBy)) {
+      if ($jOrderBy['SaleProduct'] == "true") {
+          $orderByProduct = 'ASC';
+      } else {
+          $orderByProduct = 'DESC';
+      }  
+    }
+    if (array_key_exists("SaleQuantity",$jOrderBy)) {
+      if ($jOrderBy['SaleQuantity'] == "true") {
+          $orderByQuantity = 'ASC';
+      } else {
+          $orderByQuantity = 'DESC';
+      }  
+    }
+    if (array_key_exists("SalePrice",$jOrderBy)) {
+      if ($jOrderBy['SalePrice'] == "true") {
+          $orderByPrice = 'ASC';
+      } else {
+          $orderByPrice = 'DESC';
+      }  
+    }
+  }
+
+  
+  $sqlOrder = 'ORDER BY ';
+  if ($orderByClient != '') {
+    $sqlOrder .= 'sale_clientName '.$orderByClient.'';
+  }
+  if ($orderByDate != ''){
+    if(strlen($sqlOrder) > 9){
+      $sqlOrder .= ', ';
+    }
+    $sqlOrder .= 'sale_date '.$orderByDate.'';
+  } 
+  if ($orderByDateCreation != ''){
+    if(strlen($sqlOrder) > 9){
+      $sqlOrder .= ', ';
+    }
+    $sqlOrder .= 'sale_datecreation '.$orderByDateCreation.'';
+  } 
+  if ($orderByProduct != ''){
+    if(strlen($sqlOrder) > 9){
+      $sqlOrder .= ', ';
+    }
+    $sqlOrder .= 'product_name '.$orderByProduct.'';
+  } 
+  if ($orderByQuantity != ''){
+    if(strlen($sqlOrder) > 9){
+      $sqlOrder .= ', ';
+    }
+    $sqlOrder .= 'sale_quantity '.$orderByQuantity.'';
+  } 
+  if ($orderByPrice != ''){
+    if(strlen($sqlOrder) > 9){
+      $sqlOrder .= ', ';
+    }
+    $sqlOrder .= 'sale_price '.$orderByPrice.'';
+  }
+
+  if(strlen($sqlOrder) <= 9){
+    $sqlOrder = 'ORDER BY sale_id DESC';
+  }
+  
+
+  return $sqlOrder;
+}

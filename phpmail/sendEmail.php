@@ -8,7 +8,7 @@ require 'vendor/autoload.php';
 
 
 
-function sendEmail($sEmail, $sName, $sha1Token){
+function sendEmail($sEmail, $sName, $sMensagem, $sTitulo){
     $mail = new PHPMailer(true);
 
     try {
@@ -30,19 +30,14 @@ function sendEmail($sEmail, $sName, $sha1Token){
         //Content
         $mail->isHTML(true);                                  //Set email format to HTML
         $mail->CharSet = 'UTF-8';
-        $mail->Subject = 'Esqueci minha Senha - App Management';
-        $mail->Body    = "Ola $sName, tudo bem? <br>
-        Você realizou a solicitação de senha em nosso Portal. Para confirmarmos que foi realizado por você mesmo, precisamos redefini-la, para isso clique no Link abaixo:<br>
-        <a href='http://localhost:8080/management/ChangePassword?tkn=$sha1Token'>CLIQUE AQUI PARA REDEFINIR SUA SENHA</a>.";
-
+        $mail->Subject = $sTitulo;
+        $mail->Body    = $sMensagem;
         $mail->send();
 
         $jSendEmail['success'] = true;
-        $jSendEmail['msg'] = 'Aviso: Email de recuperação de senha encaminhado. Verifique seu Email! ';
         return $jSendEmail;
     } catch (Exception $e) {
         $jSendEmail['success'] = false;
-        $jSendEmail['msg'] = 'Aviso: Não foi possível encaminhar o Email de Recuperação! ';
         return $jSendEmail;
         #return "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
     }

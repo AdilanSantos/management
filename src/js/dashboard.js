@@ -92,31 +92,36 @@ if (!localStorage.getItem("session")) {
             //Inserindo informações na Dashboard
             $('#totalSales').html(response.numberTotalSalesMonth);
             $('#productBestSellers').html(response.productBestSellingMonth);
-            $('#totalValue').html(response.priceTotalSalesMonth);
+            $('#totalValue').html("R$ "+response.priceTotalSalesMonth);
 
             aSales = response.sales;
+            sClients = '<span class="data-title">Cliente</span>'
             sNames = '<span class="data-title">Produto</span>'
             sValues = '<span class="data-title">Valor</span>';
-            sAmount = '<span class="data-title">Quantidade</span>';
-            sDates = '<span class="data-title">Data</span>';
+            sAmount = '<span class="data-title">Qntd</span>';
+            sDates = '<span class="data-title">Data de Criação</span>';
 
             for (let index = 0; index < aSales.length; index++) {
+
+                sClients +=`
+                <span class="data-list">`+ aSales[index].sale_clientName +`</span>
+                `
                 
                 sNames += `
                     <span class="data-list">`+ aSales[index].product_name +`</span>
                     `
                 sValues += `
-                    <span class="data-list">R$ `+ aSales[index].price +`</span>
+                    <span class="data-list">R$ `+ aSales[index].sale_price +`</span>
                     `
                 sAmount += `
-                    <span class="data-list">`+ aSales[index].quantity +`</span>
+                    <span class="data-list">`+ aSales[index].sale_quantity +`</span>
                     `
                 sDates += `
-                    <span class="data-list">`+ aSales[index].dataCriacao +`</span>
+                    <span class="data-list">`+ aSales[index].sale_datecreation +`</span>
                     `
     
             }
-
+            $('.data.clients').html(sClients);
             $('.data.names').html(sNames);
             $('.data.sales').html(sValues);
             $('.data.sales-amount').html(sAmount);

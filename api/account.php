@@ -16,7 +16,7 @@ switch ($_GET['action']) {
         $sSignupConfirmPwd =  escapeString(trim($jContent['confirmPassword']));
         $sSigCheck = escapeString(trim($jContent['sigCheck']));
 
-        if (!validade_Email($sSignupEmail)) {
+        if (!filter_var($sSignupEmail, FILTER_SANITIZE_EMAIL)) {
             $jResponse['success'] = false;
             $jResponse['msg'] = 'Insira um Email válido!';
             echo (json_encode($jResponse));
@@ -70,7 +70,7 @@ switch ($_GET['action']) {
         if ($sType == 'google') {
             $sLoginEmail = escapeString(trim($jContent['email']));
 
-            if (!validade_Email($sLoginEmail)) {
+            if (!filter_var($sLoginEmail, FILTER_SANITIZE_EMAIL)) {
                 $jResponse['success'] = false;
                 $jResponse['msg'] = 'Insira um Email válido!';
                 echo (json_encode($jResponse));
@@ -104,7 +104,7 @@ switch ($_GET['action']) {
             $sLoginEmail = escapeString(trim($jContent['email']));
             $sLoginPwd =  escapeString(trim($jContent['password']));
 
-            if (!validade_Email($sLoginEmail)) {
+            if (!filter_var($sLoginEmail, FILTER_SANITIZE_EMAIL)) {
                 $jResponse['success'] = false;
                 $jResponse['msg'] = 'Insira um Email válido!';
                 echo (json_encode($jResponse));
@@ -270,7 +270,6 @@ switch ($_GET['action']) {
         break;
     case 'editProfile':
         $sProfileName =  escapeString(trim($jContent['name']));
-        $sProfileEmail = escapeString(trim($jContent['email']));
         $sProfilePwd =  escapeString(trim($jContent['password']));
         $sProfileConfirmPwd =  escapeString(trim($jContent['confirmPassword']));
 
@@ -317,7 +316,7 @@ switch ($_GET['action']) {
 
         $sRecoveryEmail = escapeString(trim($jContent['email']));
 
-        if (!validade_Email($sRecoveryEmail)) {
+        if (!filter_var($sRecoveryEmail, FILTER_SANITIZE_EMAIL)) {
             $jResponse['success'] = false;
             $jResponse['msg'] = 'Insira um Email válido!';
             echo (json_encode($jResponse));
@@ -337,18 +336,23 @@ switch ($_GET['action']) {
                 $qUpdateUser = (runQueryIUD("UPDATE accounts  SET token= '{$sha1Token}' WHERE email='{$sRecoveryEmail}' "));
 
                 #Enviando Email
-                $jSendEmail = sendEmail($qConsultUser[0]['email'], $qConsultUser[0]['name'], $sha1Token);
+                $sTitulo = 'Esqueci minha Senha - App Management';
+                $sMensagem = "Ola ".$qConsultUser[0]['name'].", tudo bem? <br>
+                Você realizou a solicitação de senha em nosso Portal. Para confirmarmos que foi realizado por você mesmo, precisamos redefini-la, para isso clique no Link abaixo:<br>
+                <a href='http://localhost:8080/management/ChangePassword?tkn=$sha1Token'>CLIQUE AQUI PARA REDEFINIR SUA SENHA</a>.";
+
+                $jSendEmail = sendEmail($qConsultUser[0]['email'], $qConsultUser[0]['name'], $sMensagem, $sTitulo);
 
                 #Validando se Email foi enviado
                 if ($jSendEmail['success'] == false) {
 
                     $jResponse['success'] = $jSendEmail['success'];
-                    $jResponse['msg'] = $jSendEmail['msg'];
+                    $jResponse['msg'] = 'Aviso: Não foi possível encaminhar o Email de Recuperação!';
                     echo (json_encode($jResponse));
                 } else {
                     $jResponse['success'] = $jSendEmail['success'];
-                    $jResponse['msg'] = $jSendEmail['msg'];
-                    $jResponse['sql'] = $qUpdateUser;
+                    $jResponse['msg'] = 'Aviso: Email de recuperação de senha encaminhado. Verifique seu Email!';
+
                     echo (json_encode($jResponse));
                     break;
                 }

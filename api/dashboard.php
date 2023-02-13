@@ -19,17 +19,21 @@ switch ($_GET['action']) {
             echo json_encode($jVerifySession);
         }else{
             
-            $qSelectDashboard = runQuerySelect("SELECT *, DATE_FORMAT(date,'%d/%m/%Y') AS dataCriacao FROM sales WHERE account_id=(SELECT account_id FROM accounts WHERE session='{$sSession}')");
+            $qSelectDashboard = runQuerySelect("SELECT sales.* , products.product_name FROM sales INNER JOIN products ON sales.sale_product_id = products.product_id WHERE sale_active='S' ORDER BY sale_id DESC");
+            
 
             $fPriceTotalSalesMonth = 0;
             $aProducts = [];
             $aSalesDashboard = [];
             for ($i=0; $i < count($qSelectDashboard); $i++) { 
-                $fPriceTotalSalesMonth = $fPriceTotalSalesMonth + $qSelectDashboard[$i]['price'];
+                $fPriceTotalSalesMonth = $fPriceTotalSalesMonth + $qSelectDashboard[$i]['sale_price'];
                 array_push($aProducts, $qSelectDashboard[$i]['product_name']);
-
+                
+            
                 if (count($aSalesDashboard) < 15) {
                     array_push($aSalesDashboard, $qSelectDashboard[$i]);
+                    $aSalesDashboard[$i]['sale_date'] = date('d/m/Y', strtotime($qSelectDashboard[$i]['sale_date']));
+                    $aSalesDashboard[$i]['sale_datecreation'] = date('d/m/Y', strtotime($qSelectDashboard[$i]['sale_datecreation']));
                 }
             }
 

@@ -398,7 +398,7 @@ body.dark .switch::before{
     color: var(--text-color);
 }
 .boxes .box .number{
-    font-size: 40px;
+    font-size: 20px;
     font-weight: 500;
     color: var(--text-color);
 }
@@ -433,6 +433,10 @@ body.dark .switch::before{
     margin-top: 20px;
     white-space: nowrap;
     color: var(--text-color);
+}
+
+.activity-data .data.sales-amount, .sales-data{
+    text-align: center;
 }
 
 .bottom-content{

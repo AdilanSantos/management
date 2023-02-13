@@ -712,6 +712,7 @@ body.dark .switch::before {
     transition: var(--tran-05);
 }
 
+
 .sales-content .top .search-box{
     position: relative;
     height: 45px;
@@ -786,6 +787,11 @@ body.dark .switch::before {
     transform: var(--tran-03);
 }
 
+.sales-Data .top .search-box button:hover{
+    background: var(--pager-color);
+    color: var(--pager-color-Hover);
+}
+
 .sales-content .refresh-table .refresh{
     font-weight: 500;
     display: flex;
@@ -796,6 +802,54 @@ body.dark .switch::before {
 
 .sales-content .refresh-table .refresh.active{
     animation: spin 1s infinite;
+}
+
+/*List Options*/
+
+.sales-Data .top ul{
+    list-style: none;
+    background: var(--sidebar-color);
+}
+
+.sales-Data .top .listOptions{
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.sales-Data .top .listOptions i{
+    font-size: 26px;
+    cursor: pointer;
+    color: var(--text-color);
+}
+
+.sales-Data .top ul li{
+    display: inline-block;
+    position: relative;
+}
+
+.sales-Data .top ul.optionsDropdown li{
+    display: block;
+    margin-top: 5px;
+}
+
+.sales-Data .top ul.optionsDropdown{
+    width: 120px;
+    height: 80px;
+    right: 0;
+    background: var(--sidebar-color);
+    position: absolute;
+    z-index: 999;
+    display: none;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    text-align: start;
+    align-items: center;
+    padding: 10px 10px 10px;
+    font-size: 14px;
+}
+
+.sales-Data .top ul.optionsDropdown.active{
+    display: block;
 }
 
 /*Sales Data*/
@@ -822,14 +876,14 @@ body.dark .switch::before {
 .sales-Data tbody tr td {
     vertical-align: text-top;
     padding: 5px;
-    text-align: start;
+    text-align: center;
     max-width: 50px;
 }
 
 .sales-Data tbody th{
     vertical-align: text-top;
     padding: 5px;
-    text-align: start;
+    text-align: center;
     width: 35px;
 }
 
@@ -849,9 +903,13 @@ body.dark .switch::before {
     border-bottom: 1px solid rgb(238, 235, 235)!important;
 }
 
+.sales-Data thead th:nth-last-child(-n+6){
+    cursor: pointer;
+}
+
 .sales-Data thead tr th{
     padding: 5px;
-    text-align: start;
+    text-align: center;
 }
 
 .sales-Data .data{
@@ -950,6 +1008,18 @@ body.dark .switch::before {
 
 .buttonsSales .disableSale:hover{
     background: var(--redHover);
+}
+
+.buttonsSales .disableSale.green{
+    background: var(--green);
+}
+
+.disableSale i{
+    font-size: 26px;
+}
+
+.buttonsSales .disableSale.green:hover{
+    background: var(--greenHover);
 }
 
 .buttonsSales span{

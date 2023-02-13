@@ -214,6 +214,7 @@ $('.btn-Save').click(function () {
     }
 })
 
+
 //Lista Produtos
 if (!localStorage.getItem("session")) {
     window.location.href = "index";
@@ -530,7 +531,6 @@ $(".btnConfirmDelete").click(function(){
     $(".L-Products").find("tr :checked").each(function () {
         aProductsID.push(this.value)
     });
-    console.log(aProductsID)
     jData = '{"session":"'+sSession+'","chave": "'+aProductsID+'"}'
 
     $.ajax({
